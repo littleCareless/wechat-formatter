@@ -1,36 +1,56 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 公众号一键排版助手 (WeChat Formatter)
 
-## Getting Started
+一款专为微信公众号设计的「Markdown转微信排版」辅助工具。写好 Markdown 文本，一键套用 50 套不同风格的精美排版，并可以直接复制粘贴到微信公众平台后台。
 
-First, run the development server:
+## ✨ 核心特性
 
-```bash
+- **🚀 全面格式支持**：原生支持所有常见的 Markdown 语法解析（由 `marked` 驱动）。
+- **🎨 丰富的主题模板**：系统自动生成多达 **50套** 精美模板，涵盖 5 大种类风格，一键切换。
+- **📱 响应式排版**：三栏式工作流，支持实时手机框预览，适应桌面、平板以及手机环境。
+- **📋 一键无痕复制**：自动内联处理 CSS，点击“一键复制发布”可以直接粘贴进微信公众号文章编辑器并完美保留所有颜色与样式。
+
+## 📝 完整支持的 Markdown 语法列表
+
+本工具全面适配并重新设计了各类基础语法在微信公众号中的表现形式：
+
+1. **基本与段落语法**：普通文本段落展示与两端对齐。
+2. **标题语法** (`#`)：支持 1~6 级标题格式，不同模板拥有各异的视觉展现（如下划线、大号引用于标题等）。
+3. **换行语法**：支持直接回车触发普通换行 (`<br>`) 不剥离空白。
+4. **强调语法** (`**加粗**` / `*斜体*`)：加粗文字结合了荧光笔高亮、彩色背景等特殊效果；斜体具有各主题独立的颜色搭配。
+5. **引用语法** (`>`)：区块引用被设计为精美的卡片式摘要或警示框款式。
+6. **列表语法** (`-` / `1.`)：有序和无序列表适配不同主题的标记符号（包括圆点、字母、花朵符或实心球等）。
+7. **代码语法** (`\``` ` 及 `\``) ：适配多行代码块环境，内联代码具备独特高亮样式包裹，专门优化避免排版越界。
+8. **分隔线语法** (`---`)：针对各个主题色系单独设置了虚线、实线、甚至阴影效果的分隔线。
+9. **链接语法** (`[]()`)：自动增加主题色下划线或破折号特效，适配手机端阅读盲区问题。
+10. **图片语法** (`![]()`)：为文章内的图片自动赋予倒角、微阴影及主题颜色描边。
+11. **转义字符** (`\`) 及其它基本功能：完美兼容标准 Markdown 规范渲染。
+12. **内嵌 HTML**：支持渲染文章中混写的 HTML 标签代码，并在最外层进行样式隔离兜底。
+
+## 📦 主题分类
+
+50 套模板主要分为以下 5 大类别：
+1. **纯净极简风（10套）**：没有冗余元素的精简阅读体验。
+2. **沉稳商务风（10套）**：严控排版细节，尽显职业素养。
+3. **诗意文艺风（10套）**：细腻排版，给文字呼吸的空间。
+4. **极客科技风（10套）**：打破常规的模块化终端设计，使用前卫渐变。
+5. **欢庆节庆风（10套）**：浓烈色彩传递节日喜悦气息。
+
+## 🛠️ 项目使用
+
+本项目采用 **Next.js** 与 **React** 构建，使用 Tailwind CSS 作为样式层：
+
+\`\`\`bash
+# 安装依赖
+npm install
+
+# 运行本地控制台
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+# 构建打包
+npm run build
+\`\`\`
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+随后即可打开 `localhost:3000` 页面体验“一边写作，一边预览成稿”的高效排版。
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 👩‍💻 注意事项
+由于微信公众平台仅允许 `内联样式 (inline-css)`，本系统在转换过程中已将所有样式自动映射至 DOM 的 `style=""` 属性中，确保粘贴过程零损失。
