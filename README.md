@@ -55,5 +55,21 @@ npm run build
 ## 👩‍💻 注意事项
 由于微信公众平台仅允许 `内联样式 (inline-css)`，本系统在转换过程中已将所有样式自动映射至 DOM 的 `style=""` 属性中，确保粘贴过程零损失。
 
+## 🔍 SEO 优化
+
+本项目已进行全面 SEO 优化，包括：
+
+- **Meta 标签**：完善的 title、description、keywords
+- **Open Graph**：支持社交媒体分享预览
+- **Twitter Card**：大图预览卡片
+- **Sitemap**：自动生成 sitemap.xml
+- **Robots.txt**：搜索引擎爬虫规则配置
+- **结构化数据**：JSON-LD Schema（WebApplication、SoftwareApplication、WebSite、Organization）
+
 ## 📊 数据统计
+
 本项目集成了 Vercel Analytics，用于收集匿名访问数据，帮助了解工具的使用情况。
+
+## 🌐 访问地址
+
+- 线上地址：[https://typezen.online](https://typezen.online)
