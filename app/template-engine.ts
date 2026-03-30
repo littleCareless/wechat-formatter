@@ -261,6 +261,23 @@ export function renderArticle(markdownText: string, template: TemplateConfig, fo
 
   customRenderer.paragraph = function (token: any) {
     let html = defaultRenderer.paragraph.call(this, token)
+    
+    // Check for multi-image row (only contains images and optional whitespaces/breaks)
+    let pContent = html.trim().replace(/^<p[^>]*>/i, '').replace(/<\/p>$/i, '')
+    const textWithoutImg = pContent.replace(/<img[^>]*>/gi, '').replace(/<br\s*\/?>/gi, '').trim()
+    
+    if (textWithoutImg === '') {
+      const imagesMatch = pContent.match(/<img[^>]*>/gi)
+      if (imagesMatch && imagesMatch.length > 1) {
+        // Multi-image layout
+        const flexImages = imagesMatch.map((imgHtml: string) => {
+          return imgHtml.replace(/style="[^"]*"/i, `style="flex: 1 1 0%; min-width: 0; max-width: 100%; height: auto; object-fit: cover; border-radius: 8px; display: block;"`)
+        }).join('')
+        
+        return `<section style="display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; margin: 0 0 16px 0; width: 100%; box-sizing: border-box;">${flexImages}</section>`
+      }
+    }
+
     return html.replace(/^<p[^>]*>/i, `<p style="${template.pStyle}">`)
   }
 

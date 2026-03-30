@@ -19,6 +19,18 @@ const sampleText = `# 给你的公众号穿上不同风格的衣服
 2. **支持Markdown**：抛掉繁琐操作，一次编写处处使用
 3. **实时预览**：你在左侧修改，中间屏幕立刻刷新展现结果
 4. **一键复制**：点击右上角，去公众号后台直接 \`Ctrl+V\`
+5. **快捷插图**：支持直接使用 \`Ctrl+V\` 粘贴电脑上的截图
+6. **多排支持**：支持微信常见的图片并排（多排）布局
+
+## 第3步：图片体验
+
+这是一张普通的单图效果展示（你也可以自己随时粘贴截图）：
+
+![风景](https://picsum.photos/seed/pic1/800/400)
+
+这是**多图并排（多排）效果**展示，只需要把多张图片放在同一行（或是中间不掺杂文字和空行连续排列），就会自动均分宽度排版：
+
+![工作1](https://picsum.photos/seed/pic2/400/400) ![工作2](https://picsum.photos/seed/pic3/400/400) ![工作3](https://picsum.photos/seed/pic4/400/400)
 
 来一段代码体验：
 \`\`\`javascript
@@ -27,7 +39,7 @@ function loveTech() {
 }
 \`\`\`
 
-## 第3步：开始使用吧
+## 第4步：开始使用吧
 无论是哪种风格，都可以通过设置**重点内容**，让读者一眼抓取核心信息。赶快来试试这50套全新的排版模板，让你的文章在朋友圈**脱颖而出**！`
 
 export default function Home() {
@@ -99,6 +111,41 @@ export default function Home() {
     useEffect(() => {
         setInputText(sampleText)
     }, [])
+
+    const handlePaste = useCallback(async (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
+        const items = e.clipboardData?.items
+        if (!items) return
+
+        for (let i = 0; i < items.length; i++) {
+            const item = items[i]
+            if (item.type.indexOf('image') !== -1) {
+                e.preventDefault()
+                const file = item.getAsFile()
+                if (!file) continue
+
+                const reader = new FileReader()
+                reader.onload = (event) => {
+                    const base64 = event.target?.result as string
+                    
+                    const textarea = inputRef.current
+                    if (textarea) {
+                        const start = textarea.selectionStart
+                        const end = textarea.selectionEnd
+                        const imageMarkdown = `\n![图片](${base64})\n`
+                        const newText = inputText.substring(0, start) + imageMarkdown + inputText.substring(end)
+                        setInputText(newText)
+                        
+                        setTimeout(() => {
+                            textarea.focus()
+                            textarea.setSelectionRange(start + imageMarkdown.length, start + imageMarkdown.length)
+                        }, 0)
+                    }
+                }
+                reader.readAsDataURL(file)
+                break
+            }
+        }
+    }, [inputText])
 
     const handleInputScroll = useCallback((e: React.UIEvent<HTMLTextAreaElement>) => {
         if (!syncScroll || isScrollingRef.current === 'preview') return
@@ -260,6 +307,7 @@ export default function Home() {
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)}
                             onScroll={handleInputScroll}
+                            onPaste={handlePaste}
                             className="flex-1 w-full p-4 lg:p-6 resize-none focus:outline-none text-gray-700 leading-relaxed font-mono text-[14px] bg-[#fafafa] overflow-y-auto custom-scrollbar"
                             placeholder="支持标准 Markdown 语法：&#10;# 标题支持1-6级&#10;> 引用内容&#10;- 列表项1&#10;- 列表项2&#10;**加粗文字**"
                         />
