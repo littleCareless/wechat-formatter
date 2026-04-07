@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect, useRef, useCallback } from 'react'
-import { allTemplates, groupedTemplates, renderArticle, TemplateConfig } from './template-engine'
+import { useState, useRef, useCallback, useMemo } from 'react'
+import { allTemplates, groupedTemplates, renderArticle } from './template-engine'
 
 const sampleText = `# 给你的公众号穿上不同风格的衣服
 
@@ -43,21 +43,21 @@ function loveTech() {
 无论是哪种风格，都可以通过设置**重点内容**，让读者一眼抓取核心信息。赶快来试试这50套全新的排版模板，让你的文章在朋友圈**脱颖而出**！`
 
 export default function Home() {
-    const [inputText, setInputText] = useState('')
-    const [outputHtml, setOutputHtml] = useState('')
+    const [inputText, setInputText] = useState(sampleText)
     const [activeTab, setActiveTab] = useState<'input' | 'preview' | 'settings'>('input')
     const [currentTemplateId, setCurrentTemplateId] = useState<string>('minimalist-0')
     const [currentCategory, setCurrentCategory] = useState<string>('minimalist')
     const [fontSize, setFontSize] = useState(16)
     const [lineHeight, setLineHeight] = useState(1.8)
-    const [copied, setCopied] = useState(false)
     const [toast, setToast] = useState<{ message: string, type: 'success' | 'error' } | null>(null)
     const [syncScroll, setSyncScroll] = useState(false)
     const [showReward, setShowReward] = useState(false)
+    const [imageMap, setImageMap] = useState<Map<string, string>>(new Map())
 
     const inputRef = useRef<HTMLTextAreaElement>(null)
     const previewRef = useRef<HTMLDivElement>(null)
     const isScrollingRef = useRef<'input' | 'preview' | null>(null)
+    const imageCounterRef = useRef(0)
 
     const showToast = (message: string, type: 'success' | 'error' = 'success') => {
         setToast({ message, type })
@@ -85,9 +85,7 @@ export default function Home() {
         try {
             document.execCommand('copy')
             document.body.removeChild(tempDiv)
-            setCopied(true)
             showToast('已复制！可直接粘贴到微信后台')
-            setTimeout(() => setCopied(false), 3000)
         } catch (err) {
             console.error('Copy failed:', err)
             showToast('复制失败，请重试', 'error')
@@ -98,19 +96,20 @@ export default function Home() {
 
     const currentTemplate = allTemplates.find(t => t.id === currentTemplateId) || allTemplates[0]
 
-    // Text update hook
-    useEffect(() => {
-        if (inputText.trim()) {
-            setOutputHtml(renderArticle(inputText, currentTemplate, fontSize, lineHeight))
-        } else {
-            setOutputHtml('')
-        }
-    }, [inputText, currentTemplate, fontSize, lineHeight])
+    const outputHtml = useMemo(() => {
+        if (!inputText.trim()) return ''
+        
+        const processedText = inputText.replace(/!\[(.*?)\]\(#(img-\d+)\)/g, (match, alt, imageId) => {
+            const base64 = imageMap.get(imageId)
+            return base64 ? `![${alt}](${base64})` : match
+        })
+        
+        return renderArticle(processedText, currentTemplate, fontSize, lineHeight)
+    }, [inputText, currentTemplate, fontSize, lineHeight, imageMap])
 
-    // initial sample
-    useEffect(() => {
-        setInputText(sampleText)
-    }, [])
+    const handleCopy = () => {
+        return copyToClipboard(outputHtml)
+    }
 
     const handlePaste = useCallback(async (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
         const items = e.clipboardData?.items
@@ -126,14 +125,23 @@ export default function Home() {
                 const reader = new FileReader()
                 reader.onload = (event) => {
                     const base64 = event.target?.result as string
+                    const imageId = `img-${++imageCounterRef.current}`
+                    
+                    setImageMap(prev => {
+                        const newMap = new Map(prev)
+                        newMap.set(imageId, base64)
+                        return newMap
+                    })
                     
                     const textarea = inputRef.current
                     if (textarea) {
                         const start = textarea.selectionStart
                         const end = textarea.selectionEnd
-                        const imageMarkdown = `\n![图片](${base64})\n`
-                        const newText = inputText.substring(0, start) + imageMarkdown + inputText.substring(end)
-                        setInputText(newText)
+                        const imageMarkdown = `\n![图片](#${imageId})\n`
+                        
+                        setInputText(prev => {
+                            return prev.substring(0, start) + imageMarkdown + prev.substring(end)
+                        })
                         
                         setTimeout(() => {
                             textarea.focus()
@@ -145,7 +153,7 @@ export default function Home() {
                 break
             }
         }
-    }, [inputText])
+    }, [])
 
     const handleInputScroll = useCallback((e: React.UIEvent<HTMLTextAreaElement>) => {
         if (!syncScroll || isScrollingRef.current === 'preview') return
@@ -256,7 +264,7 @@ export default function Home() {
                             </svg>
                         </button>
                         <button
-                            onClick={() => copyToClipboard(outputHtml)}
+                            onClick={handleCopy}
                             className="bg-[#07c160] hover:bg-[#06ad56] text-white px-4 py-2 sm:px-6 sm:py-2.5 rounded-full font-bold shadow-md shadow-green-500/20 transition-all flex items-center gap-2 text-sm sm:text-base active:scale-95 disabled:opacity-50"
                             disabled={!inputText.trim()}
                         >
