@@ -1,5 +1,11 @@
 # 公众号一键排版助手 (WeChat Formatter)
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![GitHub stars](https://img.shields.io/github/stars/mspringjade/wechat-formatter.svg?style=social)](https://github.com/mspringjade/wechat-formatter/stargazers)
+[![GitHub issues](https://img.shields.io/github/issues/mspringjade/wechat-formatter.svg)](https://github.com/mspringjade/wechat-formatter/issues)
+
+**🌐 在线体验：[https://typezen.online](https://typezen.online)**
+
 一款专为微信公众号设计的「Markdown转微信排版」辅助工具。写好 Markdown 文本，一键套用 50 套不同风格的精美排版，并可以直接复制粘贴到微信公众平台后台。
 
 ## ✨ 核心特性
@@ -7,7 +13,7 @@
 - **🚀 全面格式支持**：原生支持所有常见的 Markdown 语法解析（由 `marked` 驱动）。
 - **🎨 丰富的主题模板**：系统自动生成多达 **50套** 精美模板，涵盖 5 大种类风格，一键切换。
 - **📱 响应式排版**：三栏式工作流，支持实时手机框预览，适应桌面、平板以及手机环境。
-- **📋 一键无痕复制**：自动内联处理 CSS，点击“一键复制发布”可以直接粘贴进微信公众号文章编辑器并完美保留所有颜色与样式。
+- **📋 一键无痕复制**：自动内联处理 CSS，点击"一键复制发布"可以直接粘贴进微信公众号文章编辑器并完美保留所有颜色与样式。
 
 ## 📝 完整支持的 Markdown 语法列表
 
@@ -35,43 +41,69 @@
 4. **极客科技风（10套）**：打破常规的模块化终端设计，使用前卫渐变。
 5. **欢庆节庆风（10套）**：浓烈色彩传递节日喜悦气息。
 
-## 🛠️ 项目使用
+## 🛠️ 快速开始
 
-本项目采用 **Next.js** 与 **React** 构建，使用 Tailwind CSS 作为样式层：
+### 环境要求
 
-\`\`\`bash
+- Node.js 18.0 或更高版本
+- npm 或 pnpm
+
+### 本地运行
+
+```bash
+# 克隆项目
+git clone https://github.com/mspringjade/wechat-formatter.git
+
+# 进入项目目录
+cd wechat-formatter
+
 # 安装依赖
 npm install
 
-# 运行本地控制台
+# 启动开发服务器
 npm run dev
+```
 
-# 构建打包
+打开 [http://localhost:3000](http://localhost:3000) 即可体验。
+
+### 构建部署
+
+```bash
+# 构建生产版本
 npm run build
-\`\`\`
 
-随后即可打开 `localhost:3000` 页面体验“一边写作，一边预览成稿”的高效排版。
+# 启动生产服务器
+npm run start
+```
 
 ## 👩‍💻 注意事项
+
 由于微信公众平台仅允许 `内联样式 (inline-css)`，本系统在转换过程中已将所有样式自动映射至 DOM 的 `style=""` 属性中，确保粘贴过程零损失。
 
-## 🔍 SEO 优化
+## 🤝 贡献指南
 
-本项目已进行全面 SEO 优化，包括：
+欢迎所有形式的贡献！
 
-- **Meta 标签**：完善的 title、description、keywords
-- **Open Graph**：支持社交媒体分享预览
-- **Twitter Card**：大图预览卡片
-- **Sitemap**：自动生成 sitemap.xml
-- **Robots.txt**：搜索引擎爬虫规则配置
-- **结构化数据**：JSON-LD Schema（WebApplication、SoftwareApplication、WebSite、Organization）
+### 如何贡献
 
-## 📊 数据统计
+1. Fork 本仓库
+2. 创建特性分支 (`git checkout -b feature/AmazingFeature`)
+3. 提交更改 (`git commit -m 'Add some AmazingFeature'`)
+4. 推送到分支 (`git push origin feature/AmazingFeature`)
+5. 提交 Pull Request
 
-本项目集成了以下数据统计工具：
-- **Vercel Analytics**：收集匿名访问数据，帮助了解工具的使用情况
-- **Google Analytics**：详细的用户行为分析和流量统计
+### 贡献方式
+
+- 🐛 提交 Bug 报告或功能建议
+- 💡 提出新功能想法
+- 📝 改进文档
+- 🔧 提交代码修复或新功能
 
 ## 🌐 访问地址
 
-- 线上地址：[https://typezen.online](https://typezen.online)
+- 在线体验：[https://typezen.online](https://typezen.online)
+- GitHub：[https://github.com/mspringjade/wechat-formatter](https://github.com/mspringjade/wechat-formatter)
+
+---
+
+如果这个项目对你有帮助，欢迎 ⭐ Star 支持一下！
