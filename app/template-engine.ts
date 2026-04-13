@@ -398,5 +398,5 @@ export function renderArticle(markdownText: string, template: TemplateConfig, fo
 
   const innerHtml = marked.parse(markdownText) as string
 
-  return `<table style="width: 100%; max-width: 100%; border-collapse: collapse; table-layout: fixed; background-color: ${template.backgroundColor};"><tbody><tr><td style="${template.containerStyle} font-size: ${fontSize}px; line-height: ${lineHeight}; color: ${template.baseStyle.color}; font-family: ${template.baseStyle.fontFamily}; word-wrap: break-word; word-break: break-all; box-sizing: border-box;">${innerHtml}</td></tr></tbody></table>`
+  return `<section style="width: 100%; max-width: 100%; box-sizing: border-box; background-color: ${template.backgroundColor};"><section style="${template.containerStyle} font-size: ${fontSize}px; line-height: ${lineHeight}; color: ${template.baseStyle.color}; font-family: ${template.baseStyle.fontFamily}; word-wrap: break-word; word-break: break-all; box-sizing: border-box;">${innerHtml}</section></section>`
 }
