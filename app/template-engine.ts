@@ -1,190 +1,326 @@
-import { marked } from 'marked'
+import { marked, type Tokens } from "marked";
 
 export interface TemplateConfig {
-  id: string
-  name: string
-  desc: string
-  category: string
-  themeColor: string
-  backgroundColor: string
+  id: string;
+  name: string;
+  desc: string;
+  category: string;
+  themeColor: string;
+  backgroundColor: string;
   baseStyle: {
-    color: string
-    fontFamily: string
-  }
-  containerStyle: string
-  h1Style: string
-  h2Style: string
-  h3Style: string
-  pStyle: string
-  blockquoteStyle: string
-  blockquoteInnerBefore: string
-  blockquoteInnerAfter: string
-  listStyle: string
-  listItemStyle: string
-  listIcon: string
-  strongStyle: string
-  emStyle: string
-  codeContainerStyle: string
-  codeHeaderStyle: string
-  codeBlockStyle: string
-  imgStyle: string
-  hrStyle: string
-  linkStyle: string
-  tableStyle: string
-  thStyle: string
-  tdStyle: string
-  delStyle: string
+    color: string;
+    fontFamily: string;
+  };
+  containerStyle: string;
+  h1Style: string;
+  h2Style: string;
+  h3Style: string;
+  pStyle: string;
+  blockquoteStyle: string;
+  blockquoteInnerBefore: string;
+  blockquoteInnerAfter: string;
+  listStyle: string;
+  listItemStyle: string;
+  listIcon: string;
+  strongStyle: string;
+  emStyle: string;
+  codeContainerStyle: string;
+  codeHeaderStyle: string;
+  codeBlockStyle: string;
+  imgStyle: string;
+  hrStyle: string;
+  linkStyle: string;
+  tableStyle: string;
+  thStyle: string;
+  tdStyle: string;
+  delStyle: string;
 }
 
 const colorPalettes = {
-  minimalist: ['#3b82f6', '#10b981', '#6366f1', '#f59e0b', '#ef4444', '#8b5cf6', '#14b8a6', '#f43f5e', '#64748b', '#000000'],
-  business: ['#1e40af', '#0f766e', '#4338ca', '#b45309', '#be123c', '#6d28d9', '#0e7490', '#9f1239', '#334155', '#111827'],
-  literary: ['#059669', '#d97706', '#be185d', '#7c3aed', '#0284c7', '#ea580c', '#4d7c0f', '#c026d3', '#0891b2', '#86198f'],
-  tech: ['#2563eb', '#0ea5e9', '#06b6d4', '#10b981', '#8b5cf6', '#a855f7', '#d946ef', '#f43f5e', '#6366f1', '#14b8a6'],
-  festive: ['#ef4444', '#dc2626', '#b91c1c', '#f59e0b', '#d97706', '#ea580c', '#c2410c', '#be123c', '#9f1239', '#fbbf24']
-}
+  minimalist: [
+    "#3b82f6",
+    "#10b981",
+    "#6366f1",
+    "#f59e0b",
+    "#ef4444",
+    "#8b5cf6",
+    "#14b8a6",
+    "#f43f5e",
+    "#64748b",
+    "#000000",
+  ],
+  business: [
+    "#1e40af",
+    "#0f766e",
+    "#4338ca",
+    "#b45309",
+    "#be123c",
+    "#6d28d9",
+    "#0e7490",
+    "#9f1239",
+    "#334155",
+    "#111827",
+  ],
+  literary: [
+    "#059669",
+    "#d97706",
+    "#be185d",
+    "#7c3aed",
+    "#0284c7",
+    "#ea580c",
+    "#4d7c0f",
+    "#c026d3",
+    "#0891b2",
+    "#86198f",
+  ],
+  tech: [
+    "#2563eb",
+    "#0ea5e9",
+    "#06b6d4",
+    "#10b981",
+    "#8b5cf6",
+    "#a855f7",
+    "#d946ef",
+    "#f43f5e",
+    "#6366f1",
+    "#14b8a6",
+  ],
+  festive: [
+    "#ef4444",
+    "#dc2626",
+    "#b91c1c",
+    "#f59e0b",
+    "#d97706",
+    "#ea580c",
+    "#c2410c",
+    "#be123c",
+    "#9f1239",
+    "#fbbf24",
+  ],
+};
 
-const names = ['经典', '雅致', '先锋', '深邃', '晨光', '星穹', '暖阳', '暮色', '清泉', '破晓']
+const names = [
+  "经典",
+  "雅致",
+  "先锋",
+  "深邃",
+  "晨光",
+  "星穹",
+  "暖阳",
+  "暮色",
+  "清泉",
+  "破晓",
+];
 
 const categoriesList = [
-  { id: 'minimalist', name: '极简风' },
-  { id: 'business', name: '商务风' },
-  { id: 'literary', name: '文艺风' },
-  { id: 'tech', name: '科技风' },
-  { id: 'festive', name: '节庆风' }
-]
+  { id: "minimalist", name: "极简风" },
+  { id: "business", name: "商务风" },
+  { id: "literary", name: "文艺风" },
+  { id: "tech", name: "科技风" },
+  { id: "festive", name: "节庆风" },
+];
+
+function hexToRgb(hex: string) {
+  const normalized = hex.replace("#", "").trim();
+  const fullHex =
+    normalized.length === 3
+      ? normalized
+          .split("")
+          .map((char) => char + char)
+          .join("")
+      : normalized;
+
+  const value = Number.parseInt(fullHex, 16);
+
+  return {
+    r: (value >> 16) & 255,
+    g: (value >> 8) & 255,
+    b: value & 255,
+  };
+}
+
+function hexToRgba(hex: string, alpha: number) {
+  const { r, g, b } = hexToRgb(hex);
+  const safeAlpha = Math.max(0, Math.min(1, Number(alpha.toFixed(3))));
+  return `rgba(${r}, ${g}, ${b}, ${safeAlpha})`;
+}
+
+function getStyleValue(style: string, property: string) {
+  const escapedProperty = property.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+  const match = style.match(
+    new RegExp(`${escapedProperty}\\s*:\\s*([^;]+)`, "i"),
+  );
+  return match?.[1]?.trim() ?? "";
+}
+
+function ensureStyleValue(style: string, property: string, value: string) {
+  const escapedProperty = property.replace(/[-/\\^$*+?.()|[\]{}]/g, "\\$&");
+  const regex = new RegExp(`${escapedProperty}\\s*:\\s*[^;]+;?`, "i");
+
+  if (regex.test(style)) {
+    return style.replace(regex, `${property}: ${value};`);
+  }
+
+  const normalizedStyle = style.trim();
+  if (!normalizedStyle) {
+    return `${property}: ${value};`;
+  }
+
+  return normalizedStyle.endsWith(";")
+    ? `${normalizedStyle} ${property}: ${value};`
+    : `${normalizedStyle}; ${property}: ${value};`;
+}
 
 function generateTemplates(): TemplateConfig[] {
-  const result: TemplateConfig[] = []
-  
+  const result: TemplateConfig[] = [];
+
   // 1. 极简风 (Minimalist) - 圆点、清爽边框
   colorPalettes.minimalist.forEach((color, i) => {
     result.push({
       id: `minimalist-${i}`,
       name: names[i],
-      desc: '标准的点与线排版，适合日常阅读',
-      category: 'minimalist',
+      desc: "标准的点与线排版，适合日常阅读",
+      category: "minimalist",
       themeColor: color,
-      backgroundColor: '#ffffff',
-      baseStyle: { color: '#374151', fontFamily: 'system-ui, -apple-system, sans-serif' },
-      containerStyle: 'padding: 16px; background-color: #ffffff;',
+      backgroundColor: "#ffffff",
+      baseStyle: {
+        color: "#374151",
+        fontFamily: "system-ui, -apple-system, sans-serif",
+      },
+      containerStyle: "padding: 16px; background-color: #ffffff;",
       h1Style: `font-size: 1.4em; font-weight: bold; text-align: center; margin: 24px 0 16px; color: ${color}; border-bottom: 1px solid ${color}; padding-bottom: 8px; line-height: 1.4;`,
       h2Style: `font-size: 1.25em; font-weight: bold; margin: 24px 0 16px; color: #111827; padding-left: 12px; border-left: 4px solid ${color}; line-height: 1.4;`,
       h3Style: `font-size: 1.1em; font-weight: bold; margin: 16px 0 12px; color: #374151; line-height: 1.4;`,
-      pStyle: 'margin: 0 0 16px 0; line-height: 1.8; text-indent: 0;',
+      pStyle: "margin: 0 0 16px 0; line-height: 1.8; text-indent: 0;",
       blockquoteStyle: `border-left: 3px solid ${color}; margin: 20px 0; padding: 12px 16px; color: #4b5563; background-color: #f3f4f6;`,
-      blockquoteInnerBefore: '',
-      blockquoteInnerAfter: '',
-      listStyle: 'margin: 0 0 16px 0; padding: 0; list-style-type: none;',
-      listItemStyle: 'margin: 0 0 8px 0; line-height: 1.6;',
+      blockquoteInnerBefore: "",
+      blockquoteInnerAfter: "",
+      listStyle: "margin: 0 0 16px 0; padding: 0; list-style-type: none;",
+      listItemStyle: "margin: 0 0 8px 0; line-height: 1.6;",
       listIcon: `<span style="color: ${color}; margin-right: 8px; font-weight: bold;">•</span>`,
       strongStyle: `font-weight: bold; color: ${color};`,
-      emStyle: 'font-style: italic; color: #4b5563;',
+      emStyle: "font-style: italic; color: #4b5563;",
       codeContainerStyle: `margin: 20px 0; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); border: 1px solid #e5e7eb; overflow: hidden; background-color: #f8fafc;`,
       codeHeaderStyle: `background-color: #e2e8f0; padding: 8px 12px; font-size: 0; line-height: 1;`,
       codeBlockStyle: `margin: 0; padding: 16px; overflow-x: auto; color: #334155; font-size: 13px; font-family: monospace; line-height: 1.6; white-space: pre-wrap; word-break: break-all;`,
-      imgStyle: 'max-width: 100%; border-radius: 8px; display: block; margin: 20px auto;',
+      imgStyle:
+        "max-width: 100%; border-radius: 8px; display: block; margin: 20px auto;",
       hrStyle: `border: none; border-top: 1px solid #e5e7eb; margin: 32px 0;`,
       linkStyle: `color: ${color}; text-decoration: none; border-bottom: 1px dashed ${color};`,
-      tableStyle: 'width: 100%; max-width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.95em; table-layout: fixed; word-wrap: break-word;',
+      tableStyle:
+        "width: 100%; max-width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.95em; table-layout: fixed; word-wrap: break-word;",
       thStyle: `border-bottom: 2px solid ${color}; padding: 12px 8px; text-align: left; color: #111827; font-weight: bold; margin: 0;`,
-      tdStyle: 'border-bottom: 1px solid #f3f4f6; padding: 12px 8px; color: #4b5563; margin: 0; word-wrap: break-word; word-break: break-all;',
-      delStyle: 'text-decoration: line-through; color: #9ca3af;'
-    })
-  })
+      tdStyle:
+        "border-bottom: 1px solid #f3f4f6; padding: 12px 8px; color: #4b5563; margin: 0; word-wrap: break-word; word-break: break-all;",
+      delStyle: "text-decoration: line-through; color: #9ca3af;",
+    });
+  });
 
   // 2. 商务风 (Business) - 方块、实底、专业
   colorPalettes.business.forEach((color, i) => {
     result.push({
       id: `business-${i}`,
       name: names[i],
-      desc: '方块标识符，适合严谨的行业报告',
-      category: 'business',
+      desc: "方块标识符，适合严谨的行业报告",
+      category: "business",
       themeColor: color,
-      backgroundColor: '#ffffff',
-      baseStyle: { color: '#334155', fontFamily: 'system-ui, -apple-system, sans-serif' },
-      containerStyle: 'padding: 20px; background-color: #ffffff;',
+      backgroundColor: "#ffffff",
+      baseStyle: {
+        color: "#334155",
+        fontFamily: "system-ui, -apple-system, sans-serif",
+      },
+      containerStyle: "padding: 20px; background-color: #ffffff;",
       h1Style: `font-size: 1.5em; font-weight: 800; text-align: left; margin: 24px 0 24px 0; color: ${color}; border-bottom: 3px solid ${color}; line-height: 1.4; padding-bottom: 8px;`,
       h2Style: `font-size: 1.2em; font-weight: 700; background-color: ${color}; color: #ffffff; display: inline-block; padding: 6px 16px; margin: 24px 0 16px 0; border-radius: 2px; line-height: 1.4;`,
-      h3Style: `font-size: 1.1em; font-weight: bold; margin: 16px 0 12px 0; color: ${color}; border-bottom: 1px dashed ${color}80; padding-bottom: 4px; line-height: 1.4;`,
-      pStyle: 'margin: 0 0 16px 0; line-height: 1.8; text-indent: 2em;',
+      h3Style: `font-size: 1.1em; font-weight: bold; margin: 16px 0 12px 0; color: ${color}; border-bottom: 1px dashed ${hexToRgba(color, 0.502)}; padding-bottom: 4px; line-height: 1.4;`,
+      pStyle: "margin: 0 0 16px 0; line-height: 1.8; text-indent: 2em;",
       blockquoteStyle: `border-left: 6px solid ${color}; margin: 24px 0; padding: 16px; color: #475569; background-color: #f8fafc; font-weight: 500;`,
-      blockquoteInnerBefore: '',
-      blockquoteInnerAfter: '',
-      listStyle: 'margin: 0 0 16px 0; padding: 0; list-style-type: none;',
-      listItemStyle: 'margin: 0 0 10px 0; line-height: 1.7;',
+      blockquoteInnerBefore: "",
+      blockquoteInnerAfter: "",
+      listStyle: "margin: 0 0 16px 0; padding: 0; list-style-type: none;",
+      listItemStyle: "margin: 0 0 10px 0; line-height: 1.7;",
       listIcon: `<span style="color: ${color}; margin-right: 8px; font-size: 12px;">■</span>`,
-      strongStyle: `font-weight: bold; color: ${color}; background-color: ${color}15; padding: 0 2px;`,
-      emStyle: 'font-style: italic; color: #64748b;',
+      strongStyle: `font-weight: bold; color: ${color}; background-color: ${hexToRgba(color, 0.082)}; padding: 0 2px;`,
+      emStyle: "font-style: italic; color: #64748b;",
       codeContainerStyle: `margin: 20px 0; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 1px solid #475569; overflow: hidden; background-color: #1e293b;`,
       codeHeaderStyle: `background-color: #334155; padding: 8px 12px; font-size: 0; line-height: 1; border-bottom: 1px solid #0f172a;`,
       codeBlockStyle: `margin: 0; padding: 16px; overflow-x: auto; color: #f8fafc; font-size: 13px; font-family: monospace; line-height: 1.6; white-space: pre-wrap; word-break: break-all;`,
-      imgStyle: 'max-width: 100%; border: 1px solid #e2e8f0; padding: 4px; display: block; margin: 20px auto;',
-      hrStyle: `border: none; border-top: 2px dashed ${color}80; margin: 32px 0;`,
+      imgStyle:
+        "max-width: 100%; border: 1px solid #e2e8f0; padding: 4px; display: block; margin: 20px auto;",
+      hrStyle: `border: none; border-top: 2px dashed ${hexToRgba(color, 0.502)}; margin: 32px 0;`,
       linkStyle: `color: ${color}; font-weight: 500; text-decoration: none; border-bottom: 1px solid ${color};`,
-      tableStyle: 'width: 100%; max-width: 100%; border-collapse: collapse; margin: 24px 0; border: 1px solid #cbd5e1; font-size: 0.9em; table-layout: fixed; word-wrap: break-word;',
+      tableStyle:
+        "width: 100%; max-width: 100%; border-collapse: collapse; margin: 24px 0; border: 1px solid #cbd5e1; font-size: 0.9em; table-layout: fixed; word-wrap: break-word;",
       thStyle: `border: 1px solid #cbd5e1; padding: 10px; background-color: #f8fafc; color: ${color}; font-weight: bold; margin: 0;`,
       tdStyle: `border: 1px solid #cbd5e1; padding: 10px; color: #334155; margin: 0; word-wrap: break-word; word-break: break-all;`,
-      delStyle: 'text-decoration: line-through; color: #cbd5e1;'
-    })
-  })
+      delStyle: "text-decoration: line-through; color: #cbd5e1;",
+    });
+  });
 
   // 3. 文艺风 (Literary) - 花朵、括号、留白
   colorPalettes.literary.forEach((color, i) => {
     result.push({
       id: `literary-${i}`,
       name: names[i],
-      desc: '配有小花图标，给文字呼吸喘息的空间',
-      category: 'literary',
+      desc: "配有小花图标，给文字呼吸喘息的空间",
+      category: "literary",
       themeColor: color,
-      backgroundColor: '#fdfcfb',
-      baseStyle: { color: '#4b5563', fontFamily: '"Noto Serif SC", serif, system-ui' },
+      backgroundColor: "#fdfcfb",
+      baseStyle: {
+        color: "#4b5563",
+        fontFamily: '"Noto Serif SC", serif, system-ui',
+      },
       containerStyle: `padding: 24px 16px; background-color: #fdfcfb;`,
       h1Style: `font-size: 1.35em; font-weight: normal; text-align: center; margin: 30px 0; color: ${color}; letter-spacing: 4px; line-height: 1.4;`,
-      h2Style: `font-size: 1.15em; font-weight: normal; text-align: center; margin: 30px 0 20px; color: ${color}; padding: 8px 0; line-height: 1.4; border-top: 1px solid ${color}40; border-bottom: 1px solid ${color}40; letter-spacing: 2px; display: block;`,
+      h2Style: `font-size: 1.15em; font-weight: normal; text-align: center; margin: 30px 0 20px; color: ${color}; padding: 8px 0; line-height: 1.4; border-top: 1px solid ${hexToRgba(color, 0.251)}; border-bottom: 1px solid ${hexToRgba(color, 0.251)}; letter-spacing: 2px; display: block;`,
       h3Style: `font-size: 1.05em; font-weight: bold; text-align: center; margin: 20px 0 16px 0; color: #374151; line-height: 1.4;`,
-      pStyle: 'margin: 0 0 20px 0; line-height: 2.0; letter-spacing: 1px;',
-      blockquoteStyle: `margin: 32px 0; padding: 20px; color: ${color}; text-align: center; font-style: italic; font-size: 0.95em; border-radius: 8px; background-color: ${color}08;`,
+      pStyle: "margin: 0 0 20px 0; line-height: 2.0; letter-spacing: 1px;",
+      blockquoteStyle: `margin: 32px 0; padding: 20px; color: ${color}; text-align: center; font-style: italic; font-size: 0.95em; border-radius: 8px; background-color: ${hexToRgba(color, 0.031)};`,
       blockquoteInnerBefore: ``,
       blockquoteInnerAfter: ``,
-      listStyle: 'margin: 0 0 20px 0; padding: 0; list-style-type: none;',
+      listStyle: "margin: 0 0 20px 0; padding: 0; list-style-type: none;",
       listItemStyle: `margin: 0 0 12px 0; line-height: 1.8;`,
       listIcon: `<span style="color: ${color}; margin-right: 8px; font-size: 14px;">✿</span>`,
-      strongStyle: `font-weight: normal; color: #1f2937; border-bottom: 2px solid ${color}80;`,
+      strongStyle: `font-weight: normal; color: #1f2937; border-bottom: 2px solid ${hexToRgba(color, 0.502)};`,
       emStyle: `font-style: italic; color: ${color};`,
-      codeContainerStyle: `margin: 24px 0; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.03); border: 1px solid ${color}30; overflow: hidden; background-color: #fdfaf6;`,
-      codeHeaderStyle: `background-color: ${color}10; padding: 8px 12px; font-size: 0; line-height: 1; border-bottom: 1px solid ${color}20;`,
+      codeContainerStyle: `margin: 24px 0; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.03); border: 1px solid ${hexToRgba(color, 0.188)}; overflow: hidden; background-color: #fdfaf6;`,
+      codeHeaderStyle: `background-color: ${hexToRgba(color, 0.063)}; padding: 8px 12px; font-size: 0; line-height: 1; border-bottom: 1px solid ${hexToRgba(color, 0.125)};`,
       codeBlockStyle: `margin: 0; padding: 16px; overflow-x: auto; color: #374151; font-size: 13px; font-family: monospace; white-space: pre-wrap; word-break: break-all; line-height: 1.6;`,
-      imgStyle: 'max-width: 100%; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); display: block; margin: 30px auto;',
-      hrStyle: `border: none; border-top: 1px solid ${color}40; margin: 32px auto; width: 60%;`,
+      imgStyle:
+        "max-width: 100%; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); display: block; margin: 30px auto;",
+      hrStyle: `border: none; border-top: 1px solid ${hexToRgba(color, 0.251)}; margin: 32px auto; width: 60%;`,
       linkStyle: `color: ${color}; text-decoration: none; border-bottom: 1px solid ${color}; padding-bottom: 1px;`,
-      tableStyle: 'width: 100%; max-width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.95em; table-layout: fixed; word-wrap: break-word;',
+      tableStyle:
+        "width: 100%; max-width: 100%; border-collapse: collapse; margin: 24px 0; font-size: 0.95em; table-layout: fixed; word-wrap: break-word;",
       thStyle: `border-bottom: 1px solid ${color}; padding: 12px; color: ${color}; font-weight: normal; letter-spacing: 1px; text-align: left; margin: 0;`,
-      tdStyle: `border-bottom: 1px dashed ${color}40; padding: 12px; color: #4b5563; margin: 0; word-wrap: break-word; word-break: break-all;`,
-      delStyle: 'text-decoration: line-through; opacity: 0.5;'
-    })
-  })
+      tdStyle: `border-bottom: 1px dashed ${hexToRgba(color, 0.251)}; padding: 12px; color: #4b5563; margin: 0; word-wrap: break-word; word-break: break-all; background-color: #fdfcfb;`,
+      delStyle: "text-decoration: line-through; opacity: 0.5;",
+    });
+  });
 
   // 4. 科技风 (Tech) - 尖角、极客终端
   colorPalettes.tech.forEach((color, i) => {
-    const neon = color === '#10b981' ? '#3b82f6' : '#10b981'
+    const neon = color === "#10b981" ? "#3b82f6" : "#10b981";
     result.push({
       id: `tech-${i}`,
       name: names[i],
-      desc: '打破常规的终端 /> 标识设计',
-      category: 'tech',
+      desc: "打破常规的终端 /> 标识设计",
+      category: "tech",
       themeColor: color,
-      backgroundColor: '#0f172a',
-      baseStyle: { color: '#e5e7eb', fontFamily: '"Space Grotesk", sans-serif' },
+      backgroundColor: "#0f172a",
+      baseStyle: {
+        color: "#e5e7eb",
+        fontFamily: '"Space Grotesk", sans-serif',
+      },
       containerStyle: `padding: 20px; background-color: #0f172a;`,
-      h1Style: `font-size: 1.6em; font-weight: bold; text-align: left; margin: 20px 0 32px 0; color: ${neon}; text-transform: uppercase; letter-spacing: 2px; line-height: 1.4; border-bottom: 2px solid ${color}50; padding-bottom: 12px;`,
+      h1Style: `font-size: 1.6em; font-weight: bold; text-align: left; margin: 20px 0 32px 0; color: ${neon}; text-transform: uppercase; letter-spacing: 2px; line-height: 1.4; border-bottom: 2px solid ${hexToRgba(color, 0.314)}; padding-bottom: 12px;`,
       h2Style: `font-size: 1.25em; font-weight: bold; margin: 30px 0 20px 0; color: #ffffff; border-left: 6px solid ${color}; padding-left: 14px; background-color: #1e293b; display: block; line-height: 1.4; padding-top: 6px; padding-bottom: 6px;`,
       h3Style: `font-size: 1.1em; font-weight: bold; margin: 20px 0 16px 0; color: ${color}; line-height: 1.4;`,
-      pStyle: 'margin: 0 0 16px 0; line-height: 1.8; color: #cbd5e1;',
+      pStyle: "margin: 0 0 16px 0; line-height: 1.8; color: #cbd5e1;",
       blockquoteStyle: `border: 1px solid ${color}; margin: 24px 0; padding: 16px; color: #94a3b8; background-color: #1e293b; border-radius: 4px;`,
       blockquoteInnerBefore: `<span style="color: ${neon}; margin-right: 8px;">></span>`,
       blockquoteInnerAfter: ``,
-      listStyle: 'margin: 0 0 16px 0; padding: 0; list-style-type: none;',
+      listStyle: "margin: 0 0 16px 0; padding: 0; list-style-type: none;",
       listItemStyle: `margin: 0 0 10px 0; line-height: 1.7;`,
       listIcon: `<span style="color: ${neon}; margin-right: 8px; font-weight: bold;">/></span>`,
       strongStyle: `font-weight: bold; color: #ffffff; border-bottom: 1px solid ${color};`,
@@ -198,35 +334,37 @@ function generateTemplates(): TemplateConfig[] {
       tableStyle: `width: 100%; max-width: 100%; border-collapse: collapse; margin: 24px 0; border: 1px solid #334155; font-size: 0.9em; table-layout: fixed; word-wrap: break-word;`,
       thStyle: `border: 1px solid #334155; padding: 10px; background-color: #1e293b; color: #ffffff; text-align: left; margin: 0;`,
       tdStyle: `border: 1px solid #334155; padding: 10px; color: #cbd5e1; margin: 0; word-wrap: break-word; word-break: break-all;`,
-      delStyle: `text-decoration: line-through; color: #475569;`
-    })
-  })
+      delStyle: `text-decoration: line-through; color: #475569;`,
+    });
+  });
 
   // 5. 节庆风 (Festive) - 星星、双线元素
   colorPalettes.festive.forEach((color, i) => {
     result.push({
       id: `festive-${i}`,
       name: names[i],
-      desc: '星星标识与浓烈色彩传递节日喜悦',
-      category: 'festive',
+      desc: "星星标识与浓烈色彩传递节日喜悦",
+      category: "festive",
       themeColor: color,
-      backgroundColor: '#fffbeb',
-      baseStyle: { color: '#451a03', fontFamily: 'system-ui, sans-serif' },
+      backgroundColor: "#fffbeb",
+      baseStyle: { color: "#451a03", fontFamily: "system-ui, sans-serif" },
       containerStyle: `padding: 24px; background-color: #fffbeb; border: 4px solid ${color};`,
       h1Style: `font-size: 1.5em; font-weight: bold; text-align: center; margin: 10px 0 30px 0; color: #ffffff; background-color: ${color}; padding: 12px; border-radius: 8px; letter-spacing: 2px; line-height: 1.4;`,
       h2Style: `font-size: 1.2em; font-weight: bold; text-align: center; background-color: #fef3c7; color: ${color}; border: 2px solid ${color}; margin: 24px auto 20px auto; padding: 8px 24px; border-radius: 20px; display: inline-block; line-height: 1.4;`,
       h3Style: `font-size: 1.1em; font-weight: bold; margin: 16px 0 16px 0; color: ${color}; text-align: center; line-height: 1.4;`,
-      pStyle: 'margin: 0 0 16px 0; line-height: 1.8; text-indent: 2em; color: #78350f;',
+      pStyle:
+        "margin: 0 0 16px 0; line-height: 1.8; text-indent: 2em; color: #78350f;",
       blockquoteStyle: `border: 2px dashed ${color}; border-radius: 8px; margin: 24px 0; padding: 16px; color: #92400e; background-color: #fef3c7; text-align: center; font-weight: 500;`,
       blockquoteInnerBefore: ``,
       blockquoteInnerAfter: ``,
-      listStyle: 'margin: 0 0 16px 0; padding: 0; color: #78350f; list-style-type: none;',
-      listItemStyle: 'margin: 0 0 10px 0; line-height: 1.7;',
+      listStyle:
+        "margin: 0 0 16px 0; padding: 0; color: #78350f; list-style-type: none;",
+      listItemStyle: "margin: 0 0 10px 0; line-height: 1.7;",
       listIcon: `<span style="color: #ea580c; margin-right: 8px; font-size: 14px;">★</span>`,
       strongStyle: `font-weight: bold; color: ${color};`,
       emStyle: `font-style: italic; color: #b45309;`,
       codeContainerStyle: `margin: 24px 0; border-radius: 8px; border: 2px dashed ${color}; overflow: hidden; background-color: #fef3c7;`,
-      codeHeaderStyle: `background-color: #fcd34d; padding: 8px 12px; font-size: 0; line-height: 1; border-bottom: 2px solid ${color}20;`,
+      codeHeaderStyle: `background-color: #fcd34d; padding: 8px 12px; font-size: 0; line-height: 1; border-bottom: 2px solid ${hexToRgba(color, 0.125)};`,
       codeBlockStyle: `margin: 0; padding: 16px; overflow-x: auto; color: #9f1239; font-size: 13px; font-family: monospace; white-space: pre-wrap; word-break: break-all; line-height: 1.5;`,
       imgStyle: `max-width: 100%; border: 4px solid #fef3c7; border-radius: 12px; display: block; margin: 20px auto;`,
       hrStyle: `border: none; border-top: 2px dashed ${color}; margin: 32px 0;`,
@@ -234,169 +372,279 @@ function generateTemplates(): TemplateConfig[] {
       tableStyle: `width: 100%; max-width: 100%; border-collapse: collapse; margin: 24px 0; border: 2px solid ${color}; font-size: 0.9em; table-layout: fixed; word-wrap: break-word;`,
       thStyle: `border: 1px solid ${color}; padding: 10px; background-color: #fef3c7; color: ${color}; font-weight: bold; text-align: center; margin: 0;`,
       tdStyle: `border: 1px solid ${color}; padding: 10px; color: #92400e; margin: 0; word-wrap: break-word; word-break: break-all;`,
-      delStyle: `text-decoration: line-through; color: #b45309;`
-    })
-  })
+      delStyle: `text-decoration: line-through; color: #b45309;`,
+    });
+  });
 
-  return result
+  return result;
 }
 
-export const allTemplates = generateTemplates()
-export const groupedTemplates = categoriesList.map(cat => ({
+export const allTemplates = generateTemplates();
+export const groupedTemplates = categoriesList.map((cat) => ({
   ...cat,
-  templates: allTemplates.filter(t => t.category === cat.id)
-}))
+  templates: allTemplates.filter((t) => t.category === cat.id),
+}));
 
-export function renderArticle(markdownText: string, template: TemplateConfig, fontSize: number, lineHeight: number): string {
-  const customRenderer: any = new marked.Renderer()
-  const defaultRenderer: any = new marked.Renderer()
+export function renderArticle(
+  markdownText: string,
+  template: TemplateConfig,
+  fontSize: number,
+  lineHeight: number,
+): string {
+  const customRenderer = new marked.Renderer();
+  const defaultRenderer = new marked.Renderer();
 
-  customRenderer.heading = function (token: any) {
-    let html = defaultRenderer.heading.call(this, token)
-    if (token.depth === 1) return html.replace(/^<h1[^>]*>/i, `<h1 style="${template.h1Style}">`)
-    if (token.depth === 2) return html.replace(/^<h2[^>]*>([\s\S]*?)<\/h2>/i, (m: string, content: string) => `<h2 style="${template.h2Style}">${content}</h2>`)
-    if (token.depth === 3) return html.replace(/^<h3[^>]*>/i, `<h3 style="${template.h3Style}">`)
-    return html.replace(/^<h\d[^>]*>/i, `<h${token.depth} style="${template.h3Style}">`)
-  }
+  // Adds background-color to a style string only when it doesn't already have one.
+  // This distributes the article background across individual block elements so that
+  // even if WeChat's paste handler strips the outer section background, each content
+  // block still shows the correct color. Crucially, it also removes the need for a
+  // monolithic <table> wrapper, which was blocking WeChat's smart-ad system from
+  // finding paragraph break points inside the article.
+  const bgFallback = (style: string): string => {
+    if (/background-color\s*:/i.test(style)) return style;
+    const trimmed = style.trimEnd();
+    return `${trimmed}${trimmed.endsWith(";") ? " " : "; "}background-color: ${template.backgroundColor};`;
+  };
 
-  customRenderer.paragraph = function (token: any) {
-    let html = defaultRenderer.paragraph.call(this, token)
-    
+  customRenderer.heading = function (token: Tokens.Heading) {
+    const html = defaultRenderer.heading.call(this, token);
+    if (token.depth === 1) {
+      const s = bgFallback(template.h1Style);
+      return html.replace(/^<h1[^>]*>/i, `<h1 style="${s}">`);
+    }
+    if (token.depth === 2) {
+      const s = bgFallback(template.h2Style);
+      return html.replace(
+        /^<h2[^>]*>([\s\S]*?)<\/h2>/i,
+        (m: string, content: string) => `<h2 style="${s}">${content}</h2>`,
+      );
+    }
+    if (token.depth === 3) {
+      const s = bgFallback(template.h3Style);
+      return html.replace(/^<h3[^>]*>/i, `<h3 style="${s}">`);
+    }
+    const s = bgFallback(template.h3Style);
+    return html.replace(/^<h\d[^>]*>/i, `<h${token.depth} style="${s}">`);
+  };
+
+  customRenderer.paragraph = function (token: Tokens.Paragraph) {
+    const html = defaultRenderer.paragraph.call(this, token);
+
     // Check for multi-image row (only contains images and optional whitespaces/breaks)
-    let pContent = html.trim().replace(/^<p[^>]*>/i, '').replace(/<\/p>$/i, '')
-    const textWithoutImg = pContent.replace(/<img[^>]*>/gi, '').replace(/<br\s*\/?>/gi, '').trim()
-    
-    if (textWithoutImg === '') {
-      const imagesMatch = pContent.match(/<img[^>]*>/gi)
+    const pContent = html
+      .trim()
+      .replace(/^<p[^>]*>/i, "")
+      .replace(/<\/p>$/i, "");
+    const textWithoutImg = pContent
+      .replace(/<img[^>]*>/gi, "")
+      .replace(/<br\s*\/?>/gi, "")
+      .trim();
+
+    if (textWithoutImg === "") {
+      const imagesMatch = pContent.match(/<img[^>]*>/gi);
       if (imagesMatch && imagesMatch.length > 1) {
         // Multi-image layout using table (WeChat compatible)
-        const imgCount = imagesMatch.length
-        const cellWidth = Math.floor(100 / imgCount)
-        const gapWidth = 4
-        
-        const tableCells = imagesMatch.map((imgHtml: string) => {
-          const styledImg = imgHtml.replace(/style="[^"]*"/i, `style="width: 100%; max-width: 100%; height: auto; object-fit: cover; border-radius: 8px; display: block; vertical-align: middle;"`)
-          return `<td style="width: ${cellWidth}%; padding: 0 ${gapWidth}px 0 0; vertical-align: top; box-sizing: border-box;">${styledImg}</td>`
-        }).join('')
-        
-        return `<table style="width: 100%; max-width: 100%; border-collapse: collapse; table-layout: fixed; margin: 0 0 16px 0;"><tbody><tr>${tableCells}</tr></tbody></table>`
+        const imgCount = imagesMatch.length;
+        const cellWidth = Math.floor(100 / imgCount);
+        const gapWidth = 4;
+
+        const tableCells = imagesMatch
+          .map((imgHtml: string) => {
+            const styledImg = imgHtml.replace(
+              /style="[^"]*"/i,
+              `style="width: 100%; max-width: 100%; height: auto; object-fit: cover; border-radius: 8px; display: block; vertical-align: middle;"`,
+            );
+            return `<td style="width: ${cellWidth}%; padding: 0 ${gapWidth}px 0 0; vertical-align: top; box-sizing: border-box;">${styledImg}</td>`;
+          })
+          .join("");
+
+        return `<table style="width: 100%; max-width: 100%; border-collapse: collapse; table-layout: fixed; margin: 0 0 16px 0;"><tbody><tr>${tableCells}</tr></tbody></table>`;
       }
     }
 
-    return html.replace(/^<p[^>]*>/i, `<p style="${template.pStyle}">`)
-  }
+    return html.replace(
+      /^<p[^>]*>/i,
+      `<p style="${bgFallback(template.pStyle)}">`,
+    );
+  };
 
-  customRenderer.blockquote = function (token: any) {
-    let html = defaultRenderer.blockquote.call(this, token)
-    html = html.replace(/<blockquote[^>]*>([\s\S]*?)<\/blockquote>/i, (m: string, inner: string) => {
-        inner = inner.replace(/<p[^>]*>/gi, '').replace(/<\/p>/gi, '<br>')
-        inner = inner.replace(/(<br>)+$/i, '')
-        return `<blockquote style="${template.blockquoteStyle}">` + template.blockquoteInnerBefore + inner + template.blockquoteInnerAfter + `</blockquote>`
-    })
-    return html
-  }
+  customRenderer.blockquote = function (token: Tokens.Blockquote) {
+    let html = defaultRenderer.blockquote.call(this, token);
+    html = html.replace(
+      /<blockquote[^>]*>([\s\S]*?)<\/blockquote>/i,
+      (m: string, inner: string) => {
+        inner = inner.replace(/<p[^>]*>/gi, "").replace(/<\/p>/gi, "<br>");
+        inner = inner.replace(/(<br>)+$/i, "");
+        return (
+          `<blockquote style="${template.blockquoteStyle}">` +
+          template.blockquoteInnerBefore +
+          inner +
+          template.blockquoteInnerAfter +
+          `</blockquote>`
+        );
+      },
+    );
+    return html;
+  };
 
   // 列表最外层
-  customRenderer.list = function (token: any) {
-    let html = defaultRenderer.list.call(this, token)
-    const tag = token.ordered ? 'ol' : 'ul'
-    return html.replace(new RegExp(`^<${tag}[^>]*>`, 'i'), `<${tag} style="${template.listStyle}">`)
-  }
+  customRenderer.list = function (token: Tokens.List) {
+    const html = defaultRenderer.list.call(this, token);
+    const tag = token.ordered ? "ol" : "ul";
+    return html.replace(
+      new RegExp(`^<${tag}[^>]*>`, "i"),
+      `<${tag} style="${bgFallback(template.listStyle)}">`,
+    );
+  };
 
-  customRenderer.listitem = function (token: any) {
-    let html = defaultRenderer.listitem.call(this, token)
-    html = html.replace(/<li[^>]*>([\s\S]*?)<\/li>/i, (m: string, inner: string) => {
-      inner = inner.replace(/<input disabled="" type="checkbox">/gi, '')
-      inner = inner.replace(/^<p[^>]*>/i, '').replace(/<\/p>$/i, '')
-      
-      const iconHtml = !token.task ? template.listIcon : ''
-      // For WeChat: highly compatible flex-like layout using table or inline-block
-      return `<li style="${template.listItemStyle}">
+  customRenderer.listitem = function (token: Tokens.ListItem) {
+    let html = defaultRenderer.listitem.call(this, token);
+    html = html.replace(
+      /<li[^>]*>([\s\S]*?)<\/li>/i,
+      (m: string, inner: string) => {
+        inner = inner.replace(/<input disabled="" type="checkbox">/gi, "");
+        inner = inner.replace(/^<p[^>]*>/i, "").replace(/<\/p>$/i, "");
+
+        const iconHtml = !token.task ? template.listIcon : "";
+        // For WeChat: highly compatible flex-like layout using table or inline-block
+        return `<li style="${template.listItemStyle}">
         <section style="display: flex; align-items: flex-start; justify-content: flex-start;">
           ${iconHtml}
           <section style="flex: 1;">${inner}</section>
         </section>
-      </li>`
-    })
-    return html
-  }
+      </li>`;
+      },
+    );
+    return html;
+  };
 
-  customRenderer.strong = function (token: any) {
-    const html = defaultRenderer.strong.call(this, token)
-    return html.replace(/^<strong[^>]*>/i, `<strong style="${template.strongStyle}">`)
-  }
+  customRenderer.strong = function (token: Tokens.Strong) {
+    const html = defaultRenderer.strong.call(this, token);
+    return html.replace(
+      /^<strong[^>]*>/i,
+      `<strong style="${template.strongStyle}">`,
+    );
+  };
 
-  customRenderer.em = function (token: any) {
-    const html = defaultRenderer.em.call(this, token)
-    return html.replace(/^<em[^>]*>/i, `<em style="${template.emStyle}">`)
-  }
+  customRenderer.em = function (token: Tokens.Em) {
+    const html = defaultRenderer.em.call(this, token);
+    return html.replace(/^<em[^>]*>/i, `<em style="${template.emStyle}">`);
+  };
 
-  customRenderer.codespan = function (token: any) {
-    let html = defaultRenderer.codespan.call(this, token)
-    const inlineCodeStyle = `background-color: #f1f5f9; color: ${template.themeColor}; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; margin: 0 2px;`
-    return html.replace(/^<code[^>]*>/i, `<code style="${inlineCodeStyle}">`)
-  }
+  customRenderer.codespan = function (token: Tokens.Codespan) {
+    const html = defaultRenderer.codespan.call(this, token);
+    const inlineCodeStyle = `background-color: #f1f5f9; color: ${template.themeColor}; padding: 2px 6px; border-radius: 4px; font-family: monospace; font-size: 0.9em; margin: 0 2px;`;
+    return html.replace(/^<code[^>]*>/i, `<code style="${inlineCodeStyle}">`);
+  };
 
-  customRenderer.code = function (token: any) {
-    const rawCode = token.text
-    const escapedCode = rawCode.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;')
-    
-    const macHeader = `<svg width="42" height="12" viewBox="0 0 42 12" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="6" fill="#ff5f56"/><circle cx="21" cy="6" r="6" fill="#ffbd2e"/><circle cx="36" cy="6" r="6" fill="#27c93f"/></svg>`
-    const headerBg = template.codeHeaderStyle.match(/background-color:\s*([^;]+)/i)?.[1] || '#e2e8f0'
-    const headerPadding = template.codeHeaderStyle.match(/padding:\s*([^;]+)/i)?.[1] || '8px 12px'
-    const headerBorder = template.codeHeaderStyle.match(/border-bottom:\s*([^;]+)/i)?.[1] || ''
-    const headerBorderStyle = headerBorder ? `border-bottom: ${headerBorder};` : ''
-    return `<section style="${template.codeContainerStyle}"><section style="background-color: ${headerBg}; padding: ${headerPadding}; ${headerBorderStyle}">${macHeader}</section><section style="padding: 0; margin: 0;"><pre style="${template.codeBlockStyle}"><code>${escapedCode}</code></pre></section></section>`
-  }
+  customRenderer.code = function (token: Tokens.Code) {
+    const rawCode = token.text;
+    const escapedCode = rawCode
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;")
+      .replace(/'/g, "&#39;");
 
-  customRenderer.image = function (token: any) {
-    const html = defaultRenderer.image.call(this, token)
-    return html.replace(/^<img([^>]*)>/i, `<img$1 style="${template.imgStyle}" />`)
-  }
+    const macHeader = `<svg width="42" height="12" viewBox="0 0 42 12" xmlns="http://www.w3.org/2000/svg"><circle cx="6" cy="6" r="6" fill="#ff5f56"/><circle cx="21" cy="6" r="6" fill="#ffbd2e"/><circle cx="36" cy="6" r="6" fill="#27c93f"/></svg>`;
+    const headerBg =
+      template.codeHeaderStyle.match(/background-color:\s*([^;]+)/i)?.[1] ||
+      "#e2e8f0";
+    const headerPadding =
+      template.codeHeaderStyle.match(/padding:\s*([^;]+)/i)?.[1] || "8px 12px";
+    const headerBorder =
+      template.codeHeaderStyle.match(/border-bottom:\s*([^;]+)/i)?.[1] || "";
+    const headerBorderStyle = headerBorder
+      ? `border-bottom: ${headerBorder};`
+      : "";
+    return `<section style="${template.codeContainerStyle}"><section style="background-color: ${headerBg}; padding: ${headerPadding}; ${headerBorderStyle}">${macHeader}</section><section style="padding: 0; margin: 0;"><pre style="${template.codeBlockStyle}"><code>${escapedCode}</code></pre></section></section>`;
+  };
 
-  customRenderer.hr = function (token: any) {
-    return `<hr style="${template.hrStyle}" />`
-  }
+  customRenderer.image = function (token: Tokens.Image) {
+    const html = defaultRenderer.image.call(this, token);
+    return html.replace(
+      /^<img([^>]*)>/i,
+      `<img$1 style="${template.imgStyle}" />`,
+    );
+  };
 
-  customRenderer.link = function (token: any) {
-    const html = defaultRenderer.link.call(this, token)
-    return html.replace(/^<a([^>]*)>/i, `<a$1 style="${template.linkStyle}">`)
-  }
+  customRenderer.hr = function () {
+    return `<hr style="${template.hrStyle}" />`;
+  };
 
-  customRenderer.table = function (token: any) {
-    const html = defaultRenderer.table.call(this, token)
-    return html.replace(/^<table[^>]*>/i, `<table style="${template.tableStyle}">`)
-  }
+  customRenderer.link = function (token: Tokens.Link) {
+    const html = defaultRenderer.link.call(this, token);
+    return html.replace(/^<a([^>]*)>/i, `<a$1 style="${template.linkStyle}">`);
+  };
 
-  customRenderer.tablerow = function (token: any) {
-    return defaultRenderer.tablerow.call(this, token)
-  }
+  customRenderer.table = function (token: Tokens.Table) {
+    const html = defaultRenderer.table.call(this, token);
+    const tableStyle = ensureStyleValue(
+      template.tableStyle,
+      "background-color",
+      template.backgroundColor,
+    );
+    return html.replace(
+      /^<table[^>]*>/i,
+      `<table cellpadding="0" cellspacing="0" border="0" style="${tableStyle}">`,
+    );
+  };
 
-  customRenderer.tablecell = function (token: any) {
-    const html = defaultRenderer.tablecell.call(this, token)
-    const isHeader = token.header
-    let style = isHeader ? template.thStyle : template.tdStyle
+  customRenderer.tablerow = function (token: Tokens.TableRow) {
+    return defaultRenderer.tablerow.call(this, token);
+  };
+
+  customRenderer.tablecell = function (token: Tokens.TableCell) {
+    const html = defaultRenderer.tablecell.call(this, token);
+    const isHeader = token.header;
+    let style = isHeader ? template.thStyle : template.tdStyle;
+    const fallbackCellBackground = isHeader
+      ? getStyleValue(template.thStyle, "background-color") ||
+        template.backgroundColor
+      : getStyleValue(template.tdStyle, "background-color") ||
+        template.backgroundColor;
+
+    style = ensureStyleValue(style, "background-color", fallbackCellBackground);
+
     if (token.align) {
-       style = style.trim().endsWith(';') ? `${style} text-align: ${token.align};` : `${style}; text-align: ${token.align};`
+      style = style.trim().endsWith(";")
+        ? `${style} text-align: ${token.align};`
+        : `${style}; text-align: ${token.align};`;
     }
-    const tag = isHeader ? 'th' : 'td'
-    return html.replace(new RegExp(`^<${tag}[^>]*>`, 'i'), `<${tag} style="${style}">`)
-  }
 
-  customRenderer.del = function (token: any) {
-    const html = defaultRenderer.del.call(this, token)
-    return html.replace(/^<del[^>]*>/i, `<del style="${template.delStyle}">`)
-  }
+    const tag = isHeader ? "th" : "td";
+    const bgColor =
+      getStyleValue(style, "background-color") || template.backgroundColor;
 
-  customRenderer.checkbox = function (token: any) {
-    return token.checked ? 
-      '<span style="color: #10b981; font-weight: bold; margin-right: 4px;">☑</span>' : 
-      '<span style="color: #9ca3af; margin-right: 4px;">☐</span>'
-  }
+    return html.replace(
+      new RegExp(`^<${tag}[^>]*>`, "i"),
+      `<${tag} bgcolor="${bgColor}" style="${style}">`,
+    );
+  };
 
-  marked.setOptions({ renderer: customRenderer as any, breaks: true, gfm: true })
+  customRenderer.del = function (token: Tokens.Del) {
+    const html = defaultRenderer.del.call(this, token);
+    return html.replace(/^<del[^>]*>/i, `<del style="${template.delStyle}">`);
+  };
 
-  const innerHtml = marked.parse(markdownText) as string
+  customRenderer.checkbox = function (token: Tokens.Checkbox) {
+    return token.checked
+      ? '<span style="color: #10b981; font-weight: bold; margin-right: 4px;">☑</span>'
+      : '<span style="color: #9ca3af; margin-right: 4px;">☐</span>';
+  };
 
-  return `<section style="width: 100%; max-width: 100%; box-sizing: border-box; background-color: ${template.backgroundColor};"><section style="${template.containerStyle} font-size: ${fontSize}px; line-height: ${lineHeight}; color: ${template.baseStyle.color}; font-family: ${template.baseStyle.fontFamily}; word-wrap: break-word; word-break: break-all; box-sizing: border-box;">${innerHtml}</section></section>`
+  marked.setOptions({
+    renderer: customRenderer,
+    breaks: true,
+    gfm: true,
+  });
+
+  const innerHtml = marked.parse(markdownText) as string;
+  const articleContainerStyle = ensureStyleValue(
+    `${template.containerStyle} font-size: ${fontSize}px; line-height: ${lineHeight}; color: ${template.baseStyle.color}; font-family: ${template.baseStyle.fontFamily}; word-wrap: break-word; word-break: break-all; box-sizing: border-box;`,
+    "background-color",
+    template.backgroundColor,
+  );
+
+  return `<section style="width: 100%; max-width: 100%; box-sizing: border-box; background-color: ${template.backgroundColor};"><section style="${articleContainerStyle}">${innerHtml}</section></section>`;
 }
