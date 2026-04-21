@@ -48,6 +48,8 @@ const colorPalettes = {
     "#f43f5e",
     "#64748b",
     "#000000",
+    "#2dd4bf",
+    "#fb923c",
   ],
   business: [
     "#1e40af",
@@ -60,6 +62,8 @@ const colorPalettes = {
     "#9f1239",
     "#334155",
     "#111827",
+    "#1d4ed8",
+    "#047857",
   ],
   literary: [
     "#059669",
@@ -72,6 +76,8 @@ const colorPalettes = {
     "#c026d3",
     "#0891b2",
     "#86198f",
+    "#db2777",
+    "#7c2d12",
   ],
   tech: [
     "#2563eb",
@@ -84,6 +90,8 @@ const colorPalettes = {
     "#f43f5e",
     "#6366f1",
     "#14b8a6",
+    "#f97316",
+    "#84cc16",
   ],
   festive: [
     "#ef4444",
@@ -96,6 +104,8 @@ const colorPalettes = {
     "#be123c",
     "#9f1239",
     "#fbbf24",
+    "#e11d48",
+    "#ca8a04",
   ],
 };
 
@@ -110,6 +120,8 @@ const names = [
   "暮色",
   "清泉",
   "破晓",
+  "璀璨",
+  "幽蓝",
 ];
 
 const categoriesList = [
