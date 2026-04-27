@@ -4,18 +4,18 @@
 [![GitHub stars](https://img.shields.io/github/stars/mspringjade/wechat-formatter.svg?style=social)](https://github.com/mspringjade/wechat-formatter/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/mspringjade/wechat-formatter.svg)](https://github.com/mspringjade/wechat-formatter/issues)
 
-**🌐 在线体验：[https://typezen.online](https://typezen.online)**
+**在线体验：[https://typezen.online](https://typezen.online)**
 
 一款专为微信公众号设计的「Markdown转微信排版」辅助工具。写好 Markdown 文本，一键套用 50 套不同风格的精美排版，并可以直接复制粘贴到微信公众平台后台。
 
-## ✨ 核心特性
+## 核心特性
 
-- **🚀 全面格式支持**：原生支持所有常见的 Markdown 语法解析（由 `marked` 驱动）。
-- **🎨 丰富的主题模板**：系统自动生成多达 **50套** 精美模板，涵盖 5 大种类风格，一键切换。
-- **📱 响应式排版**：三栏式工作流，支持实时手机框预览，适应桌面、平板以及手机环境。
-- **📋 一键无痕复制**：自动内联处理 CSS，点击"一键复制发布"可以直接粘贴进微信公众号文章编辑器并完美保留所有颜色与样式。
+- **全面格式支持**：原生支持所有常见的 Markdown 语法解析（由 `marked` 驱动）。
+- **丰富的主题模板**：系统自动生成多达 **50套** 精美模板，涵盖 5 大种类风格，一键切换。
+- **响应式排版**：三栏式工作流，支持实时手机框预览，适应桌面、平板以及手机环境。
+- **一键无痕复制**：自动内联处理 CSS，点击"一键复制发布"可以直接粘贴进微信公众号文章编辑器并完美保留所有颜色与样式。
 
-## 📝 完整支持的 Markdown 语法列表
+## 完整支持的 Markdown 语法列表
 
 本工具全面适配并重新设计了各类基础语法在微信公众号中的表现形式：
 
@@ -32,7 +32,7 @@
 11. **转义字符** (`\`) 及其它基本功能：完美兼容标准 Markdown 规范渲染。
 12. **内嵌 HTML**：支持渲染文章中混写的 HTML 标签代码，并在最外层进行样式隔离兜底。
 
-## 📦 主题分类
+## 主题分类
 
 50 套模板主要分为以下 5 大类别：
 1. **纯净极简风（10套）**：没有冗余元素的精简阅读体验。
@@ -41,7 +41,7 @@
 4. **极客科技风（10套）**：打破常规的模块化终端设计，使用前卫渐变。
 5. **欢庆节庆风（10套）**：浓烈色彩传递节日喜悦气息。
 
-## 🛠️ 快速开始
+## 快速开始
 
 ### 环境要求
 
@@ -76,11 +76,11 @@ npm run build
 npm run start
 ```
 
-## 👩‍💻 注意事项
+## 注意事项
 
 由于微信公众平台仅允许 `内联样式 (inline-css)`，本系统在转换过程中已将所有样式自动映射至 DOM 的 `style=""` 属性中，确保粘贴过程零损失。
 
-## 🤝 贡献指南
+## 贡献指南
 
 欢迎所有形式的贡献！
 
@@ -94,16 +94,16 @@ npm run start
 
 ### 贡献方式
 
-- 🐛 提交 Bug 报告或功能建议
-- 💡 提出新功能想法
-- 📝 改进文档
-- 🔧 提交代码修复或新功能
+- 提交 Bug 报告或功能建议
+- 提出新功能想法
+- 改进文档
+- 提交代码修复或新功能
 
-## 🌐 访问地址
+## 访问地址
 
 - 在线体验：[https://typezen.online](https://typezen.online)
 - GitHub：[https://github.com/mspringjade/wechat-formatter](https://github.com/mspringjade/wechat-formatter)
 
 ---
 
-如果这个项目对你有帮助，欢迎 ⭐ Star 支持一下！
+如果这个项目对你有帮助，欢迎 Star 支持一下！

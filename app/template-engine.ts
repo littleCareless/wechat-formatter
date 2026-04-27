@@ -292,7 +292,7 @@ function generateTemplates(): TemplateConfig[] {
       blockquoteInnerAfter: ``,
       listStyle: "margin: 0 0 20px 0; padding: 0; list-style-type: none;",
       listItemStyle: `margin: 0 0 12px 0; line-height: 1.8;`,
-      listIcon: `<span style="color: ${color}; margin-right: 8px; font-size: 14px;">✿</span>`,
+      listIcon: `<span style="display: inline-block; width: 7px; height: 7px; border: 1px solid ${color}; border-radius: 50%; margin-right: 8px; vertical-align: middle;"></span>`,
       strongStyle: `font-weight: normal; color: #1f2937; border-bottom: 2px solid ${hexToRgba(color, 0.502)};`,
       emStyle: `font-style: italic; color: ${color};`,
       codeContainerStyle: `margin: 24px 0; border-radius: 12px; box-shadow: 0 8px 20px rgba(0,0,0,0.03); border: 1px solid ${hexToRgba(color, 0.188)}; overflow: hidden; background-color: #fdfaf6;`,
@@ -372,7 +372,7 @@ function generateTemplates(): TemplateConfig[] {
       listStyle:
         "margin: 0 0 16px 0; padding: 0; color: #78350f; list-style-type: none;",
       listItemStyle: "margin: 0 0 10px 0; line-height: 1.7;",
-      listIcon: `<span style="color: #ea580c; margin-right: 8px; font-size: 14px;">★</span>`,
+      listIcon: `<span style="display: inline-block; width: 7px; height: 7px; background-color: #ea580c; transform: rotate(45deg); margin-right: 8px; vertical-align: middle;"></span>`,
       strongStyle: `font-weight: bold; color: ${color};`,
       emStyle: `font-style: italic; color: #b45309;`,
       codeContainerStyle: `margin: 24px 0; border-radius: 8px; border: 2px dashed ${color}; overflow: hidden; background-color: #fef3c7;`,
@@ -641,8 +641,8 @@ export function renderArticle(
 
   customRenderer.checkbox = function (token: Tokens.Checkbox) {
     return token.checked
-      ? '<span style="color: #10b981; font-weight: bold; margin-right: 4px;">☑</span>'
-      : '<span style="color: #9ca3af; margin-right: 4px;">☐</span>';
+      ? '<span style="display: inline-block; width: 12px; height: 12px; line-height: 12px; text-align: center; border: 1px solid #10b981; color: #10b981; font-size: 10px; font-weight: bold; margin-right: 4px;">x</span>'
+      : '<span style="display: inline-block; width: 12px; height: 12px; border: 1px solid #9ca3af; margin-right: 4px;"></span>';
   };
 
   marked.setOptions({

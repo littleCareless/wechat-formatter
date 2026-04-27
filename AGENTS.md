@@ -12,7 +12,7 @@
 - **Markdown 解析**: marked 17.0.4
 - **语言**: TypeScript 5
 
-> ⚠️ **重要**: Next.js 16 有破坏性变更，API、约定和文件结构可能与训练数据不同。编写代码前请先阅读 `node_modules/next/dist/docs/` 中的相关指南。
+> **重要**: Next.js 16 有破坏性变更，API、约定和文件结构可能与训练数据不同。编写代码前请先阅读 `node_modules/next/dist/docs/` 中的相关指南。
 
 ## 项目结构
 
@@ -33,7 +33,7 @@ wechat-formatter/
 ├── tsconfig.json          # TypeScript 配置
 ├── next.config.ts         # Next.js 配置
 ├── postcss.config.mjs     # PostCSS 配置
-└── eslint.config.mjs      # ESLint 配置
+└── biome.json             # Biome 配置
 ```
 
 ## 核心功能模块
@@ -83,7 +83,7 @@ npm run build
 # 启动生产服务器
 npm run start
 
-# 运行 ESLint 检查
+# 运行 Biome 检查
 npm run lint
 ```
 
