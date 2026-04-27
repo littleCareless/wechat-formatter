@@ -20,6 +20,12 @@
   --neo-pink: #ff6f9f;
   --neo-cyan: #5fcfe3;
   --neo-green: #67d99a;
+  --neo-app-header: #f6c945;
+  --neo-section-header: #5fcfe3;
+  --neo-template-header: #ff6f9f;
+  --neo-sub-header: #5fcfe3;
+  --neo-stage: #f6c945;
+  --neo-on-header: #151515;
   --neo-border: 3px solid var(--neo-ink);
   --neo-border-thin: 2px solid var(--neo-ink);
   --neo-shadow: 6px 6px 0 0 var(--neo-ink);
@@ -37,6 +43,12 @@
   --neo-pink: #ff7ca8;
   --neo-cyan: #5bc4d6;
   --neo-green: #7bd99f;
+  --neo-app-header: #0f0d0b;
+  --neo-section-header: #123f4a;
+  --neo-template-header: #5a1d37;
+  --neo-sub-header: #173740;
+  --neo-stage: #1f2a3a;
+  --neo-on-header: #f8edda;
 }
 
 body {
@@ -69,14 +81,14 @@ body {
 }
 
 .neo-panel-strong {
-  background-color: var(--neo-yellow);
+  background-color: var(--neo-stage);
   border: var(--neo-border);
   border-radius: 0;
   box-shadow: var(--neo-shadow-lg);
 }
 
 .neo-strip {
-  background-color: var(--neo-cyan);
+  background-color: var(--neo-section-header);
   border-bottom: var(--neo-border);
 }
 

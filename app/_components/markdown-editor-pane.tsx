@@ -58,7 +58,7 @@ export function MarkdownEditorPane({
       className={`flex-[1.2] flex-col neo-panel overflow-hidden ${activeTab === "input" ? "flex" : "hidden md:flex"}`}
     >
       <div className="neo-strip px-4 py-3 flex justify-between items-center shrink-0">
-        <span className="text-sm font-black text-[#111111] flex items-center gap-2 uppercase">
+        <span className="text-sm font-black text-[var(--neo-on-header)] flex items-center gap-2 uppercase">
           <FileText className="w-4 h-4" />
           Markdown 输入
         </span>

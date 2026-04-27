@@ -45,14 +45,14 @@ export function SettingsPane({
       className={`w-full md:w-64 lg:w-[320px] flex-col gap-4 shrink-0 h-full overflow-y-auto pb-24 md:pb-0 custom-scrollbar ${activeTab === "settings" ? "flex" : "hidden md:flex"}`}
     >
       <div className="neo-panel overflow-hidden flex flex-col max-h-[60vh] md:max-h-full">
-        <div className="p-4 bg-[var(--neo-pink)] border-b-[3px] border-[var(--neo-ink)] shrink-0">
-          <h2 className="text-[15px] font-black text-[#111111] flex items-center gap-2 uppercase">
+        <div className="p-4 bg-[var(--neo-template-header)] border-b-[3px] border-[var(--neo-ink)] shrink-0">
+          <h2 className="text-[15px] font-black text-[var(--neo-on-header)] flex items-center gap-2 uppercase">
             <Sparkles className="w-4 h-4" />
             主题模板 ({allTemplatesCount}款)
           </h2>
         </div>
 
-        <div className="flex gap-2 overflow-x-auto bg-[var(--neo-cyan)] px-2 py-2 shrink-0 scrollbar-hide border-b-[3px] border-[var(--neo-ink)]">
+        <div className="flex gap-2 overflow-x-auto bg-[var(--neo-sub-header)] px-2 py-2 shrink-0 scrollbar-hide border-b-[3px] border-[var(--neo-ink)]">
           {groupedTemplates.map((cat) => (
             <button
               key={cat.id}

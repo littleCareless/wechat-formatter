@@ -20,7 +20,7 @@ export function PreviewPane({
       onScroll={onPreviewScroll}
       className={`flex-[1.2] flex-col overflow-y-auto ${activeTab === "preview" ? "flex" : "hidden md:flex"} custom-scrollbar`}
     >
-      <div className="flex-1 bg-linear-to-br from-gray-100 to-gray-200/50 dark:from-gray-800 dark:to-gray-900/50 rounded-2xl shadow-inner border border-gray-200 dark:border-gray-700 flex justify-center py-6 px-4 md:py-8">
+      <div className="flex-1 neo-panel-strong flex justify-center py-6 px-4 md:py-8">
         <div className="bg-white dark:bg-gray-800 shadow-[0_8px_30px_rgb(0,0,0,0.12)] rounded-[2.5rem] p-1.5 border-4 border-gray-800 h-fit min-h-[667px] w-full max-w-[375px] shrink-0 relative transition-all duration-300 transform origin-top hover:scale-[1.02]">
           <div className="absolute top-0 inset-x-0 h-7 flex justify-between items-center px-6 z-10 pointer-events-none">
             <div className="text-[10px] text-gray-800 dark:text-gray-200 font-medium">9:41</div>
