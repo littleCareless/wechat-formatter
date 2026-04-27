@@ -9,7 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
+    "@ai-sdk/anthropic": "^3.0.71",
+    "@ai-sdk/openai": "^3.0.53",
     "@vercel/analytics": "^2.0.1",
+    "ai": "^6.0.168",
     "marked": "^17.0.4",
     "next": "16.2.0",
     "react": "19.2.4",

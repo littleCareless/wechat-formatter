@@ -46,6 +46,13 @@ function loveTech() {
 ## 第4步：开始使用吧
 无论是哪种风格，都可以通过设置**重点内容**，让读者一眼抓取核心信息。赶快来试试这50套全新的排版模板，让你的文章在朋友圈**脱颖而出**！`;
 
+type AiProviderType = "openai" | "anthropic";
+
+const AI_PROVIDER_STORAGE_KEY = "wechat-formatter-ai-provider";
+const AI_BASE_URL_STORAGE_KEY = "wechat-formatter-ai-base-url";
+const AI_API_KEY_STORAGE_KEY = "wechat-formatter-ai-api-key";
+const AI_MODEL_STORAGE_KEY = "wechat-formatter-ai-model";
+
 export default function Home() {
   const [inputText, setInputText] = useState(sampleText);
   const [activeTab, setActiveTab] = useState<"input" | "preview" | "settings">(
@@ -67,6 +74,13 @@ export default function Home() {
   const [showImageModal, setShowImageModal] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
   const [imageDesc, setImageDesc] = useState("");
+  const [isAiFormatting, setIsAiFormatting] = useState(false);
+  const [showAiConfigModal, setShowAiConfigModal] = useState(false);
+  const [aiProviderType, setAiProviderType] =
+    useState<AiProviderType>("openai");
+  const [aiBaseUrl, setAiBaseUrl] = useState("");
+  const [aiApiKey, setAiApiKey] = useState("");
+  const [aiModel, setAiModel] = useState("");
 
   const inputRef = useRef<HTMLTextAreaElement>(null);
   const previewRef = useRef<HTMLDivElement>(null);
@@ -81,6 +95,16 @@ export default function Home() {
       setIsDarkMode(true);
       document.documentElement.classList.add("dark");
     }
+  }, []);
+
+  useEffect(() => {
+    const savedProvider = localStorage.getItem(AI_PROVIDER_STORAGE_KEY);
+    if (savedProvider === "openai" || savedProvider === "anthropic") {
+      setAiProviderType(savedProvider);
+    }
+    setAiBaseUrl(localStorage.getItem(AI_BASE_URL_STORAGE_KEY) || "");
+    setAiApiKey(localStorage.getItem(AI_API_KEY_STORAGE_KEY) || "");
+    setAiModel(localStorage.getItem(AI_MODEL_STORAGE_KEY) || "");
   }, []);
 
   const toggleDarkMode = () => {
@@ -338,6 +362,39 @@ export default function Home() {
     setTimeout(() => setToast(null), 3000);
   };
 
+  const saveAiSettings = () => {
+    const trimmedBaseUrl = aiBaseUrl.trim();
+    const trimmedApiKey = aiApiKey.trim();
+    const trimmedModel = aiModel.trim();
+
+    if (!trimmedBaseUrl || !trimmedApiKey || !trimmedModel) {
+      showToast("请填写 API 地址、API Key 和模型名称", "error");
+      return;
+    }
+
+    localStorage.setItem(AI_PROVIDER_STORAGE_KEY, aiProviderType);
+    localStorage.setItem(AI_BASE_URL_STORAGE_KEY, trimmedBaseUrl);
+    localStorage.setItem(AI_API_KEY_STORAGE_KEY, trimmedApiKey);
+    localStorage.setItem(AI_MODEL_STORAGE_KEY, trimmedModel);
+    setAiBaseUrl(trimmedBaseUrl);
+    setAiApiKey(trimmedApiKey);
+    setAiModel(trimmedModel);
+    setShowAiConfigModal(false);
+    showToast("AI 配置已保存");
+  };
+
+  const clearAiSettings = () => {
+    localStorage.removeItem(AI_PROVIDER_STORAGE_KEY);
+    localStorage.removeItem(AI_BASE_URL_STORAGE_KEY);
+    localStorage.removeItem(AI_API_KEY_STORAGE_KEY);
+    localStorage.removeItem(AI_MODEL_STORAGE_KEY);
+    setAiProviderType("openai");
+    setAiBaseUrl("");
+    setAiApiKey("");
+    setAiModel("");
+    showToast("AI 配置已清空");
+  };
+
   const copyToClipboard = async (html: string) => {
     if (!html) {
       showToast("请先生成排版内容", "error");
@@ -411,6 +468,53 @@ export default function Home() {
   const handleCopy = () => {
     return copyToClipboard(outputHtml);
   };
+
+  const handleAiFormat = useCallback(async () => {
+    if (!inputText.trim() || isAiFormatting) return;
+
+    const trimmedBaseUrl = aiBaseUrl.trim();
+    const trimmedApiKey = aiApiKey.trim();
+    const trimmedModel = aiModel.trim();
+    if (!trimmedBaseUrl || !trimmedApiKey || !trimmedModel) {
+      setShowAiConfigModal(true);
+      showToast("请先配置 AI 服务地址、API Key 和模型", "error");
+      return;
+    }
+
+    setIsAiFormatting(true);
+    try {
+      const res = await fetch("/api/ai-format", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          markdown: inputText,
+          providerType: aiProviderType,
+          baseUrl: trimmedBaseUrl,
+          apiKey: trimmedApiKey,
+          model: trimmedModel,
+        }),
+      });
+
+      const data = (await res.json()) as {
+        markdown?: string;
+        error?: string;
+      };
+
+      if (!res.ok) {
+        showToast(data.error || "AI 排版失败，请重试", "error");
+        return;
+      }
+
+      if (data.markdown) {
+        setInputText(data.markdown);
+        showToast("AI 排版完成");
+      }
+    } catch {
+      showToast("网络错误，请稍后重试", "error");
+    } finally {
+      setIsAiFormatting(false);
+    }
+  }, [inputText, isAiFormatting, aiProviderType, aiBaseUrl, aiApiKey, aiModel]);
 
   const handlePaste = useCallback(
     async (e: React.ClipboardEvent<HTMLTextAreaElement>) => {
@@ -639,6 +743,135 @@ export default function Home() {
         </div>
       )}
 
+      {/* AI 配置弹窗 */}
+      {showAiConfigModal && (
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
+          onClick={() => setShowAiConfigModal(false)}
+        >
+          <div
+            className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 max-w-md w-full mx-4 transform transition-all"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="text-center mb-5">
+              <h3 className="text-xl font-bold text-gray-800 dark:text-gray-200 mb-2">
+                AI 服务配置
+              </h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                支持 OpenAI 接口和 Anthropic 原生接口
+              </p>
+            </div>
+
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  API 类型
+                </label>
+                <div className="grid grid-cols-2 gap-2 rounded-xl bg-gray-100 dark:bg-gray-700 p-1">
+                  <button
+                    type="button"
+                    onClick={() => setAiProviderType("openai")}
+                    className={`py-2 rounded-lg text-sm font-medium transition-all ${
+                      aiProviderType === "openai"
+                        ? "bg-white dark:bg-gray-600 text-violet-600 dark:text-violet-300 shadow-sm"
+                        : "text-gray-500 dark:text-gray-400"
+                    }`}
+                  >
+                    OpenAI
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setAiProviderType("anthropic")}
+                    className={`py-2 rounded-lg text-sm font-medium transition-all ${
+                      aiProviderType === "anthropic"
+                        ? "bg-white dark:bg-gray-600 text-violet-600 dark:text-violet-300 shadow-sm"
+                        : "text-gray-500 dark:text-gray-400"
+                    }`}
+                  >
+                    Anthropic
+                  </button>
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  API 地址
+                </label>
+                <input
+                  type="text"
+                  value={aiBaseUrl}
+                  onChange={(e) => setAiBaseUrl(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  placeholder={
+                    aiProviderType === "anthropic"
+                      ? "https://api.anthropic.com/v1"
+                      : "https://api.openai.com/v1"
+                  }
+                  autoComplete="off"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  API Key
+                </label>
+                <input
+                  type="password"
+                  value={aiApiKey}
+                  onChange={(e) => setAiApiKey(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  placeholder="粘贴你的 API Key"
+                  autoComplete="off"
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  模型名称
+                </label>
+                <input
+                  type="text"
+                  value={aiModel}
+                  onChange={(e) => setAiModel(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500"
+                  placeholder={
+                    aiProviderType === "anthropic"
+                      ? "claude-sonnet-4-5"
+                      : "gpt-4o"
+                  }
+                  autoComplete="off"
+                />
+              </div>
+
+              <p className="text-xs leading-relaxed text-gray-400 dark:text-gray-500">
+                配置只保存在当前浏览器本地，排版时会临时发送到服务端调用你填写的模型服务。
+              </p>
+            </div>
+
+            <div className="flex gap-3 mt-5">
+              <button
+                onClick={saveAiSettings}
+                className="flex-1 py-2.5 bg-violet-500 hover:bg-violet-600 text-white rounded-xl font-medium transition-colors"
+              >
+                保存配置
+              </button>
+              <button
+                onClick={clearAiSettings}
+                className="px-4 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 rounded-xl font-medium transition-colors"
+              >
+                清空
+              </button>
+              <button
+                onClick={() => setShowAiConfigModal(false)}
+                className="px-4 py-2.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-600 dark:text-gray-300 rounded-xl font-medium transition-colors"
+              >
+                取消
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* 隐藏的文件输入 */}
       <input
         ref={fileInputRef}
@@ -795,12 +1028,42 @@ export default function Home() {
                 </svg>
                 Markdown 输入
               </span>
-              <button
-                onClick={() => setInputText(sampleText)}
-                className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded"
-              >
-                恢复示例内容
-              </button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handleAiFormat}
+                  className="text-xs text-white bg-linear-to-r from-violet-500 to-indigo-500 hover:from-violet-600 hover:to-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed transition-all px-3 py-1.5 rounded-full font-bold shadow-sm flex items-center gap-1.5"
+                  disabled={!inputText.trim() || isAiFormatting}
+                  title="使用 AI 优化当前 Markdown 排版结构"
+                >
+                  {isAiFormatting ? (
+                    <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                  ) : (
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+                    </svg>
+                  )}
+                  {isAiFormatting ? "排版中..." : "一键排版"}
+                </button>
+                <button
+                  onClick={() => setShowAiConfigModal(true)}
+                  className="p-1.5 rounded-full bg-violet-50 dark:bg-violet-900/30 text-violet-600 dark:text-violet-300 hover:bg-violet-100 dark:hover:bg-violet-900/50 transition-colors"
+                  title="配置 AI 服务"
+                >
+                  <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.827 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.827 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.827-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.827-3.31 2.37-2.37.996.607 2.296.07 2.572-1.065z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </button>
+                <button
+                  onClick={() => setInputText(sampleText)}
+                  className="text-xs text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 transition-colors bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded"
+                >
+                  恢复示例内容
+                </button>
+              </div>
             </div>
             
             {/* Markdown 快捷工具栏 */}
