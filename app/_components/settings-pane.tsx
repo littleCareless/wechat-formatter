@@ -133,7 +133,7 @@ export function SettingsPane({
         {isTemplatesOpen && (
           <>
             <div className="relative shrink-0 bg-(--neo-sub-header) border-b-[3px] border-(--neo-ink)">
-              <div className="flex gap-2 overflow-x-auto px-2 py-2 pr-28 scrollbar-hide">
+              <div className="flex gap-2 overflow-x-auto px-2 py-2 pr-14 scrollbar-hide">
                 {groupedTemplates.map((cat) => (
                   <button
                     key={cat.id}
@@ -144,10 +144,13 @@ export function SettingsPane({
                   </button>
                 ))}
               </div>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center bg-gradient-to-l from-(--neo-sub-header) via-(--neo-sub-header) to-transparent pl-8 pr-2">
-                <span className="flex items-center gap-1 border-[2px] border-(--neo-ink) bg-(--neo-yellow) px-1.5 py-0.5 text-[10px] font-black text-[#151515] shadow-[2px_2px_0_0_(--neo-ink)]">
-                  <ArrowLeftRight className="w-3 h-3" strokeWidth={3} />
-                  左右滑动
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center bg-gradient-to-l from-(--neo-sub-header) via-(--neo-sub-header) to-transparent pl-6 pr-2">
+                <span
+                  className="flex items-center justify-center border-[2px] border-(--neo-ink) bg-(--neo-yellow) p-1 shadow-[2px_2px_0_0_(--neo-ink)] text-[#151515]"
+                  title="左右滑动切换分类"
+                  aria-hidden
+                >
+                  <ArrowLeftRight className="w-3.5 h-3.5" strokeWidth={3} />
                 </span>
               </div>
             </div>

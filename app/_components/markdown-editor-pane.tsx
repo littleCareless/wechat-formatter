@@ -57,37 +57,39 @@ export function MarkdownEditorPane({
     <div
       className={`flex-[1.2] flex-col neo-panel overflow-hidden ${activeTab === "input" ? "flex" : "hidden md:flex"}`}
     >
-      <div className="neo-strip px-4 py-3 flex justify-between items-center shrink-0">
-        <span className="text-sm font-black text-(--neo-on-header) flex items-center gap-2 uppercase">
-          <FileText className="w-4 h-4" />
-          Markdown 输入
+      <div className="neo-strip px-3 py-2.5 sm:px-4 sm:py-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3 shrink-0 min-w-0">
+        <span className="text-xs sm:text-sm font-black text-(--neo-on-header) flex items-center gap-2 uppercase shrink-0 min-w-0">
+          <FileText className="w-4 h-4 shrink-0" />
+          <span className="truncate">Markdown 输入</span>
         </span>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 justify-end w-full sm:w-auto">
           <button
             onClick={onAiFormat}
-            className="neo-button neo-button-pink text-xs px-3 py-1.5 flex items-center gap-1.5"
+            className="neo-button neo-button-pink text-xs px-2.5 sm:px-3 py-1.5 flex items-center gap-1.5 whitespace-nowrap shrink-0"
             disabled={!inputText.trim() || isAiFormatting}
             title="使用 AI 优化当前 Markdown 排版结构"
           >
             {isAiFormatting ? (
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+              <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
             ) : (
-              <Sparkles className="w-3.5 h-3.5" />
+              <Sparkles className="w-3.5 h-3.5 shrink-0" />
             )}
             {isAiFormatting ? "排版中..." : "一键排版"}
           </button>
           <button
             onClick={onOpenAiConfig}
-            className="neo-button neo-button-ghost p-1.5"
+            className="neo-button neo-button-ghost p-1.5 shrink-0"
             title="配置 AI 服务"
           >
             <Settings className="w-3.5 h-3.5" />
           </button>
           <button
             onClick={onRestoreSample}
-            className="neo-button neo-button-secondary text-xs px-2 py-1"
+            className="neo-button neo-button-secondary text-xs px-2 sm:px-2.5 py-1 whitespace-nowrap shrink-0"
+            title="恢复示例 Markdown"
           >
-            恢复示例内容
+            <span className="hidden max-[340px]:inline">恢复示例</span>
+            <span className="inline max-[340px]:hidden">恢复示例内容</span>
           </button>
         </div>
       </div>
@@ -209,7 +211,7 @@ export function MarkdownEditorPane({
         placeholder="支持标准 Markdown 语法：&#10;# 标题支持1-6级&#10;> 引用内容&#10;- 列表项1&#10;- 列表项2&#10;**加粗文字**"
       />
 
-      <div className="bg-(--neo-green) px-4 py-2 border-t-[3px] border-(--neo-ink) flex items-center justify-between text-xs text-[#111111] shrink-0 font-bold">
+      <div className="bg-(--neo-green) px-4 py-2 border-t-[3px] border-(--neo-ink) flex items-center justify-between text-xs text-(--neo-on-accent) shrink-0 font-bold">
         <div className="flex items-center gap-4">
           <span>
             字符: <strong>{wordCount.chars}</strong>
