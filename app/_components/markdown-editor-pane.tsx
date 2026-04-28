@@ -58,7 +58,7 @@ export function MarkdownEditorPane({
       className={`flex-[1.2] flex-col neo-panel overflow-hidden ${activeTab === "input" ? "flex" : "hidden md:flex"}`}
     >
       <div className="neo-strip px-4 py-3 flex justify-between items-center shrink-0">
-        <span className="text-sm font-black text-[var(--neo-on-header)] flex items-center gap-2 uppercase">
+        <span className="text-sm font-black text-(--neo-on-header) flex items-center gap-2 uppercase">
           <FileText className="w-4 h-4" />
           Markdown 输入
         </span>
@@ -92,7 +92,7 @@ export function MarkdownEditorPane({
         </div>
       </div>
 
-      <div className="bg-[var(--neo-surface)] px-3 py-2 border-b-[3px] border-[var(--neo-ink)] flex flex-wrap items-center gap-2 shrink-0">
+      <div className="bg-(--neo-surface) px-3 py-2 border-b-[3px] border-(--neo-ink) flex flex-wrap items-center gap-2 shrink-0">
         <div className="flex items-center gap-1 mr-2">
           <button
             onClick={() => insertHeading(1)}
@@ -116,7 +116,7 @@ export function MarkdownEditorPane({
             H3
           </button>
         </div>
-        <div className="w-[3px] h-6 bg-[var(--neo-ink)] mx-1" />
+        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1" />
         <button
           onClick={() => insertMarkdown("**", "**", "加粗")}
           className="neo-toolbar-button p-1.5"
@@ -138,7 +138,7 @@ export function MarkdownEditorPane({
         >
           S
         </button>
-        <div className="w-[3px] h-6 bg-[var(--neo-ink)] mx-1" />
+        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1" />
         <button
           onClick={() => insertList("ul")}
           className="neo-toolbar-button p-1.5"
@@ -160,7 +160,7 @@ export function MarkdownEditorPane({
         >
           <Quote className="w-4 h-4" />
         </button>
-        <div className="w-[3px] h-6 bg-[var(--neo-ink)] mx-1" />
+        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1" />
         <button
           onClick={() => insertMarkdown("`", "`", "代码")}
           className="neo-toolbar-button p-1.5 font-mono text-sm"
@@ -175,7 +175,7 @@ export function MarkdownEditorPane({
         >
           <Code2 className="w-4 h-4" />
         </button>
-        <div className="w-[3px] h-6 bg-[var(--neo-ink)] mx-1" />
+        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1" />
         <button
           onClick={insertLink}
           className="neo-toolbar-button p-1.5"
@@ -205,11 +205,11 @@ export function MarkdownEditorPane({
         onChange={(e) => setInputText(e.target.value)}
         onScroll={onInputScroll}
         onPaste={onPaste}
-        className="flex-1 w-full p-4 lg:p-6 resize-none focus:outline-none text-[var(--neo-ink)] leading-relaxed font-mono text-[14px] bg-[var(--neo-surface)] overflow-y-auto custom-scrollbar"
+        className="flex-1 w-full p-4 lg:p-6 resize-none focus:outline-none text-(--neo-ink) leading-relaxed font-mono text-[14px] bg-(--neo-surface) overflow-y-auto custom-scrollbar"
         placeholder="支持标准 Markdown 语法：&#10;# 标题支持1-6级&#10;> 引用内容&#10;- 列表项1&#10;- 列表项2&#10;**加粗文字**"
       />
 
-      <div className="bg-[var(--neo-green)] px-4 py-2 border-t-[3px] border-[var(--neo-ink)] flex items-center justify-between text-xs text-[#111111] shrink-0 font-bold">
+      <div className="bg-(--neo-green) px-4 py-2 border-t-[3px] border-(--neo-ink) flex items-center justify-between text-xs text-[#111111] shrink-0 font-bold">
         <div className="flex items-center gap-4">
           <span>
             字符: <strong>{wordCount.chars}</strong>
