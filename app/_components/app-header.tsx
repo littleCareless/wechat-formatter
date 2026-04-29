@@ -28,7 +28,7 @@ export function AppHeader({
           <img
             src="/logo.png"
             alt="TypeZen"
-            className="w-10 h-10 object-cover rounded-xl drop-shadow-[3px_3px_0_rgba(21,21,21,0.2)] dark:drop-shadow-[3px_3px_0_rgba(248,237,218,0.18)]"
+            className="w-10 h-10 p-1 border-2 border-(--neo-ink) shadow-[3px_3px_0_0_var(--neo-ink)] bg-white"
           />
           <h1 className="text-lg sm:text-2xl font-black tracking-tight uppercase text-(--neo-on-header)">
             TypeZen · AI 公众号排版助手

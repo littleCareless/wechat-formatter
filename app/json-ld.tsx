@@ -33,7 +33,7 @@ const jsonLd = {
         "自定义字号行高",
         "主题色与排版细节微调",
       ],
-      screenshot: `${SITE_URL}/logo.png`,
+      screenshot: `${SITE_URL}/og-image.png`,
     },
     {
       "@type": "SoftwareApplication",
