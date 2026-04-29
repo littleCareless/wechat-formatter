@@ -53,7 +53,7 @@ function RangeControl({
       <div className="flex justify-between text-xs font-black text-(--neo-ink)">
         <span>{label}</span>
         <span
-          className={`${badgeClassNames[tone]} border-[2px] border-(--neo-ink) px-1.5 text-[#151515]`}
+          className={`${badgeClassNames[tone]} border-2 border-(--neo-ink) px-1.5 text-[#151515]`}
         >
           {displayValue}
         </span>
@@ -149,9 +149,9 @@ export function SettingsPane({
                   </button>
                 ))}
               </div>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center bg-gradient-to-l from-(--neo-sub-header) via-(--neo-sub-header) to-transparent pl-6 pr-2">
+              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center bg-linear-to-l from-(--neo-sub-header) via-(--neo-sub-header) to-transparent pl-6 pr-2">
                 <span
-                  className="flex items-center justify-center border-[2px] border-(--neo-ink) bg-(--neo-yellow) p-1 shadow-[2px_2px_0_0_(--neo-ink)] text-[#151515]"
+                  className="flex items-center justify-center border-2 border-(--neo-ink) bg-(--neo-yellow) p-1 shadow-[2px_2px_0_0_(--neo-ink)] text-[#151515]"
                   title="左右滑动切换分类"
                   aria-hidden
                 >
@@ -172,7 +172,7 @@ export function SettingsPane({
                         // 同步颜色到调色板
                         updateFormatTweaks("themeColor", template.themeColor);
                       }}
-                      className={`relative p-2 border-[2px] border-(--neo-ink) text-center transition-all duration-200 flex flex-col gap-1 items-center justify-center bg-(--neo-surface) shadow-[3px_3px_0_0_(--neo-ink)] active:translate-x-[3px] active:translate-y-[3px] active:shadow-none ${
+                      className={`relative p-2 border-2 border-(--neo-ink) text-center transition-all duration-200 flex flex-col gap-1 items-center justify-center bg-(--neo-surface) shadow-[3px_3px_0_0_(--neo-ink)] active:translate-x-0.75 active:translate-y-0.75 active:shadow-none ${
                         currentTemplateId === template.id
                           ? "bg-(--neo-yellow)"
                           : "hover:bg-(--neo-cyan)"
@@ -180,7 +180,7 @@ export function SettingsPane({
                     >
                     <div className="flex items-center justify-center gap-1.5 w-full">
                       <span
-                        className="w-2.5 h-2.5 border-[2px] border-(--neo-ink) shrink-0"
+                        className="w-2.5 h-2.5 border-2 border-(--neo-ink) shrink-0"
                         style={{ backgroundColor: template.themeColor }}
                       />
                       <span className="font-black text-xs text-(--neo-ink) truncate">
@@ -189,7 +189,7 @@ export function SettingsPane({
                     </div>
 
                     {currentTemplateId === template.id && (
-                      <div className="absolute -top-2 -right-2 bg-(--neo-green) text-[#111111] border-[2px] border-(--neo-ink) p-0.5 shadow-[2px_2px_0_0_(--neo-ink)]">
+                      <div className="absolute -top-2 -right-2 bg-(--neo-green) text-[#111111] border-2 border-(--neo-ink) p-0.5 shadow-[2px_2px_0_0_(--neo-ink)]">
                         <Check className="w-2.5 h-2.5" strokeWidth={3} />
                       </div>
                     )}
@@ -198,7 +198,7 @@ export function SettingsPane({
               </div>
 
               {/* 调色板工具 */}
-              <div className="border-[2px] border-(--neo-ink) bg-white p-2.5 shadow-[3px_3px_0_0_(--neo-ink)]">
+              <div className="border-2 border-(--neo-ink) bg-white p-2.5 shadow-[3px_3px_0_0_(--neo-ink)]">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5 text-[11px] font-black text-(--neo-ink)">
                     <Palette className="w-3.5 h-3.5" />
@@ -214,7 +214,7 @@ export function SettingsPane({
                   )}
                 </div>
                 <div className="flex gap-2">
-                  <div className="relative w-10 h-10 shrink-0 border-[2px] border-(--neo-ink) shadow-[2px_2px_0_0_(--neo-ink)] overflow-hidden cursor-pointer active:translate-x-[1px] active:translate-y-[1px] active:shadow-none">
+                  <div className="relative w-10 h-10 shrink-0 border-2 border-(--neo-ink) shadow-[2px_2px_0_0_(--neo-ink)] overflow-hidden cursor-pointer active:translate-x-px active:translate-y-px active:shadow-none">
                     <input
                       type="color"
                       id="theme-color-input"
@@ -228,7 +228,7 @@ export function SettingsPane({
                     value={formatTweaks.themeColor || ""}
                     placeholder={currentTemplate?.themeColor || "输入 Hex 颜色值"}
                     onChange={(e) => updateFormatTweaks("themeColor", e.target.value)}
-                    className="flex-1 h-10 px-3 py-2 border-[2px] border-(--neo-ink) bg-white text-xs font-bold text-(--neo-ink) focus:outline-none focus:bg-(--neo-yellow) placeholder:text-gray-400"
+                    className="flex-1 h-10 px-3 py-2 border-2 border-(--neo-ink) bg-white text-xs font-bold text-(--neo-ink) focus:outline-none focus:bg-(--neo-yellow) placeholder:text-gray-400"
                   />
                 </div>
               </div>
@@ -329,7 +329,7 @@ export function SettingsPane({
                 </button>
               </div>
 
-              <div className="border-[2px] border-(--neo-ink) bg-(--neo-surface) p-3 space-y-3">
+              <div className="border-2 border-(--neo-ink) bg-(--neo-surface) p-3 space-y-3">
                 <div className="text-xs font-black text-(--neo-ink)">页面留白</div>
                 <RangeControl
                   label="上留白"

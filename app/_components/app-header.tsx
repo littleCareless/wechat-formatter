@@ -31,7 +31,7 @@ export function AppHeader({
             className="w-10 h-10 object-cover rounded-xl drop-shadow-[3px_3px_0_rgba(21,21,21,0.2)] dark:drop-shadow-[3px_3px_0_rgba(248,237,218,0.18)]"
           />
           <h1 className="text-lg sm:text-2xl font-black tracking-tight uppercase text-(--neo-on-header)">
-            TypeZen · 公众号排版助手
+            TypeZen · AI 公众号排版助手
           </h1>
         </div>
 

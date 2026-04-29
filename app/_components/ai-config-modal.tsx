@@ -243,7 +243,7 @@ export function AiConfigModal({
         <div className="text-center mb-5">
           <h3 className="text-xl font-black text-(--neo-ink) mb-2 uppercase">AI 服务配置</h3>
           <p className="text-sm neo-text-muted font-bold">
-            支持 OpenRouter，以及 OpenAI / Anthropic 格式 API 接口
+            支持 OpenRouter 模型库，以及 OpenAI / Anthropic 兼容 API 接口
           </p>
         </div>
 

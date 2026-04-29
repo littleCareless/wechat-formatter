@@ -367,7 +367,6 @@ function getStylesByCategory(category: string, color: string) {
         tdStyle: `border: 1px solid #334155; padding: 10px; color: #cbd5e1; margin: 0; word-wrap: break-word; word-break: break-all;`,
         delStyle: `text-decoration: line-through; color: #475569;`,
       };
-    case "festive":
     default:
       return {
         themeColor: color,

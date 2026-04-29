@@ -67,14 +67,14 @@ export function MarkdownEditorPane({
             onClick={onAiFormat}
             className="neo-button neo-button-pink text-xs px-2.5 sm:px-3 py-1.5 flex items-center gap-1.5 whitespace-nowrap shrink-0"
             disabled={!inputText.trim() || isAiFormatting}
-            title="使用 AI 优化当前 Markdown 排版结构"
+            title="使用 AI 一键优化当前 Markdown 排版结构"
           >
             {isAiFormatting ? (
               <Loader2 className="w-3.5 h-3.5 animate-spin shrink-0" />
             ) : (
               <Sparkles className="w-3.5 h-3.5 shrink-0" />
             )}
-            {isAiFormatting ? "排版中..." : "一键排版"}
+            {isAiFormatting ? "AI 排版中..." : "AI 一键排版"}
           </button>
           <button
             onClick={onOpenAiConfig}
