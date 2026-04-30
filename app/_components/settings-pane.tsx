@@ -198,7 +198,7 @@ export function SettingsPane({
               </div>
 
               {/* 调色板工具 */}
-              <div className="border-2 border-(--neo-ink) bg-white p-2.5 shadow-[3px_3px_0_0_(--neo-ink)]">
+              <div className="border-2 border-(--neo-ink) bg-(--neo-surface) p-2.5 shadow-[3px_3px_0_0_(--neo-ink)]">
                 <div className="flex items-center justify-between mb-2">
                   <div className="flex items-center gap-1.5 text-[11px] font-black text-(--neo-ink)">
                     <Palette className="w-3.5 h-3.5" />
@@ -228,7 +228,7 @@ export function SettingsPane({
                     value={formatTweaks.themeColor || ""}
                     placeholder={currentTemplate?.themeColor || "输入 Hex 颜色值"}
                     onChange={(e) => updateFormatTweaks("themeColor", e.target.value)}
-                    className="flex-1 h-10 px-3 py-2 border-2 border-(--neo-ink) bg-white text-xs font-bold text-(--neo-ink) focus:outline-none focus:bg-(--neo-yellow) placeholder:text-gray-400"
+                    className="flex-1 h-10 px-3 py-2 border-2 border-(--neo-ink) bg-(--neo-surface) text-xs font-bold text-(--neo-ink) focus:outline-none focus:bg-(--neo-yellow) placeholder:text-gray-400"
                   />
                 </div>
               </div>

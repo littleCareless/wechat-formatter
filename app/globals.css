@@ -296,6 +296,34 @@ body {
   scrollbar-width: none;
 }
 
+.neo-scrollbar::-webkit-scrollbar {
+  width: 12px;
+}
+
+.neo-scrollbar::-webkit-scrollbar-track {
+  background: var(--neo-surface);
+  border-left: 2px solid var(--neo-line);
+}
+
+.neo-scrollbar::-webkit-scrollbar-thumb {
+  background: var(--neo-yellow);
+  border: 2px solid var(--neo-ink);
+  box-shadow: 2px 2px 0 0 var(--neo-shadow-core);
+}
+
+.neo-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: var(--neo-pink);
+}
+
+.neo-scrollbar::-webkit-scrollbar-thumb:active {
+  background: var(--neo-cyan);
+}
+
+.neo-scrollbar {
+  scrollbar-width: auto;
+  scrollbar-color: var(--neo-yellow) var(--neo-surface);
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }

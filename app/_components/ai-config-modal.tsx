@@ -237,17 +237,17 @@ export function AiConfigModal({
       onClick={onClose}
     >
       <div
-        className="neo-modal p-6 max-w-2xl w-full mx-4 transform transition-all max-h-[90vh] overflow-y-auto custom-scrollbar"
+        className="neo-modal flex flex-col max-w-2xl w-full mx-4 transform transition-all max-h-[90vh]"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="text-center mb-5">
+        <div className="text-center p-6 pb-4 shrink-0 border-b-[3px] border-(--neo-ink)">
           <h3 className="text-xl font-black text-(--neo-ink) mb-2 uppercase">AI 服务配置</h3>
           <p className="text-sm neo-text-muted font-bold">
             支持 OpenRouter 模型库，以及 OpenAI / Anthropic 兼容 API 接口
           </p>
         </div>
 
-        <div className="space-y-4">
+        <div className="flex-1 overflow-y-auto neo-scrollbar p-6 py-4 space-y-4">
           <div>
             <label className="block text-sm font-black text-(--neo-ink) mb-2">
               API 类型
@@ -468,7 +468,7 @@ export function AiConfigModal({
           </p>
         </div>
 
-        <div className="flex gap-3 mt-5">
+        <div className="flex gap-3 p-6 pt-4 shrink-0 border-t-[3px] border-(--neo-ink)">
           <button
             onClick={onSave}
             className="neo-button neo-button-primary flex-1 py-2.5"
