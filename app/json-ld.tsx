@@ -1,4 +1,10 @@
-const SITE_URL = "https://typezen.online";
+import {
+  SITE_BRAND,
+  SITE_DESCRIPTION,
+  SITE_HOST,
+  SITE_PRODUCT_NAME,
+  SITE_URL,
+} from "@/lib/site-config";
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -6,10 +12,10 @@ const jsonLd = {
     {
       "@type": "WebApplication",
       "@id": `${SITE_URL}/#webapplication`,
-      name: "公众号一键排版助手",
-      alternateName: "TypeZen",
+      name: `${SITE_BRAND} · ${SITE_PRODUCT_NAME}`,
+      alternateName: [SITE_BRAND, SITE_HOST, SITE_PRODUCT_NAME],
       url: SITE_URL,
-      description: "免费在线Markdown转微信公众号排版工具，提供极简、商务、文艺、科技、节庆5大类共50套精美模板，支持实时预览、一键复制。",
+      description: SITE_DESCRIPTION,
       applicationCategory: "UtilityApplication",
       operatingSystem: "Web Browser",
       offers: {
@@ -19,25 +25,21 @@ const jsonLd = {
       },
       featureList: [
         "Markdown转微信排版",
-        "50套精美模板",
+        "AI一键优化排版结构",
+        "72套精美模板",
+        "6大风格分类",
         "实时预览",
         "一键复制发布",
-        "5大风格分类",
         "自定义字号行高",
+        "主题色与排版细节微调",
       ],
-      screenshot: `${SITE_URL}/logo.png`,
-      aggregateRating: {
-        "@type": "AggregateRating",
-        ratingValue: "4.8",
-        ratingCount: "1000",
-        bestRating: "5",
-        worstRating: "1",
-      },
+      screenshot: `${SITE_URL}/og-image.png`,
     },
     {
       "@type": "SoftwareApplication",
       "@id": `${SITE_URL}/#softwareapplication`,
-      name: "公众号一键排版助手",
+      name: `${SITE_BRAND} · ${SITE_PRODUCT_NAME}`,
+      alternateName: SITE_BRAND,
       applicationCategory: "UtilitiesApplication",
       operatingSystem: "Any",
       offers: {
@@ -52,8 +54,9 @@ const jsonLd = {
       "@type": "WebSite",
       "@id": `${SITE_URL}/#website`,
       url: SITE_URL,
-      name: "TypeZen - 公众号一键排版助手",
-      description: "Markdown转微信公众号排版工具",
+      name: `${SITE_BRAND} · ${SITE_PRODUCT_NAME}`,
+      alternateName: [SITE_HOST, SITE_BRAND],
+      description: SITE_DESCRIPTION,
       publisher: {
         "@id": `${SITE_URL}/#organization`,
       },
@@ -62,7 +65,8 @@ const jsonLd = {
     {
       "@type": "Organization",
       "@id": `${SITE_URL}/#organization`,
-      name: "TypeZen",
+      name: SITE_BRAND,
+      alternateName: SITE_HOST,
       url: SITE_URL,
       logo: {
         "@type": "ImageObject",
