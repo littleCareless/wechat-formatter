@@ -33,6 +33,8 @@ const DEFAULT_FORMAT_TWEAKS: FormatTweaks = {
   letterSpacing: 0,
   imageRadius: 8,
   themeColor: "#ff6f9f",
+  h1Layout: "center",
+  h2Layout: "left",
 };
 
 export default function Home() {

@@ -1,5 +1,5 @@
 import { marked, type Tokens } from "marked";
-import type { FormatTweaks } from "./_types/formatter";
+import type { FormatTweaks, H1LayoutType } from "./_types/formatter";
 
 export interface TemplateConfig {
   id: string;
@@ -35,6 +35,7 @@ export interface TemplateConfig {
   thStyle: string;
   tdStyle: string;
   delStyle: string;
+  defaultH2Layout: H1LayoutType;
 }
 
 const colorPalettes = {
@@ -232,6 +233,7 @@ function getStylesByCategory(category: string, color: string) {
         thStyle: `border: 2px solid #000000; padding: 12px; background-color: ${color}; color: #000000; font-weight: 800; text-align: left;`,
         tdStyle: "border: 2px solid #000000; padding: 12px; color: #000000; font-weight: 500;",
         delStyle: "text-decoration: line-through; opacity: 0.6;",
+        defaultH2Layout: "left" as H1LayoutType,
       };
     case "minimalist":
       return {
@@ -266,6 +268,7 @@ function getStylesByCategory(category: string, color: string) {
         tdStyle:
           "border-bottom: 1px solid #f3f4f6; padding: 12px 8px; color: #4b5563; margin: 0; word-wrap: break-word; word-break: break-all;",
         delStyle: "text-decoration: line-through; color: #9ca3af;",
+        defaultH2Layout: "left" as H1LayoutType,
       };
     case "business":
       return {
@@ -300,6 +303,7 @@ function getStylesByCategory(category: string, color: string) {
         thStyle: `border: 1px solid #cbd5e1; padding: 10px; background-color: #f8fafc; color: ${color}; font-weight: bold; margin: 0;`,
         tdStyle: `border: 1px solid #cbd5e1; padding: 10px; color: #334155; margin: 0; word-wrap: break-word; word-break: break-all;`,
         delStyle: "text-decoration: line-through; color: #cbd5e1;",
+        defaultH2Layout: "left" as H1LayoutType,
       };
     case "literary":
       return {
@@ -334,6 +338,7 @@ function getStylesByCategory(category: string, color: string) {
         thStyle: `border-bottom: 1px solid ${color}; padding: 12px; color: ${color}; font-weight: normal; letter-spacing: 1px; text-align: left; margin: 0;`,
         tdStyle: `border-bottom: 1px dashed ${hexToRgba(color, 0.251)}; padding: 12px; color: #4b5563; margin: 0; word-wrap: break-word; word-break: break-all; background-color: #fdfcfb;`,
         delStyle: "text-decoration: line-through; opacity: 0.5;",
+        defaultH2Layout: "center" as H1LayoutType,
       };
     case "tech":
       return {
@@ -366,6 +371,7 @@ function getStylesByCategory(category: string, color: string) {
         thStyle: `border: 1px solid #334155; padding: 10px; background-color: #1e293b; color: #ffffff; text-align: left; margin: 0;`,
         tdStyle: `border: 1px solid #334155; padding: 10px; color: #cbd5e1; margin: 0; word-wrap: break-word; word-break: break-all;`,
         delStyle: `text-decoration: line-through; color: #475569;`,
+        defaultH2Layout: "left" as H1LayoutType,
       };
     default:
       return {
@@ -395,6 +401,7 @@ function getStylesByCategory(category: string, color: string) {
         thStyle: `border: 1px solid ${color}; padding: 10px; background-color: #fef3c7; color: ${color}; font-weight: bold; text-align: center; margin: 0;`,
         tdStyle: `border: 1px solid ${color}; padding: 10px; color: #92400e; margin: 0; word-wrap: break-word; word-break: break-all;`,
         delStyle: `text-decoration: line-through; color: #b45309;`,
+        defaultH2Layout: "center" as H1LayoutType,
       };
   }
 }
@@ -534,11 +541,6 @@ export function renderArticle(
     letterSpacing: true,
   });
 
-  const listItemStyle = tuneBlockStyle(template.listItemStyle, {
-    lineHeight: true,
-    letterSpacing: true,
-  });
-
   const blockquoteStyle = tuneBlockStyle(template.blockquoteStyle, {
     lineHeight: true,
     letterSpacing: true,
@@ -576,10 +578,38 @@ export function renderArticle(
     // Extract margin and align
     const marginMatch = s.match(/margin\s*:\s*([^;]+)/i);
     const margin = marginMatch ? marginMatch[1] : (depth === 1 ? "32px 0" : "24px 0");
-    const cleanStyle = s.replace(/margin\s*:\s*[^;]+;?/gi, "margin: 0;");
+    let cleanStyle = s.replace(/margin\s*:\s*[^;]+;?/gi, "margin: 0;");
     
     const textAlignMatch = cleanStyle.match(/text-align\s*:\s*([^;]+)/i);
-    const textAlign = textAlignMatch ? textAlignMatch[1] : (depth === 1 ? "center" : "left");
+    let textAlign = textAlignMatch ? textAlignMatch[1] : (depth === 1 ? "center" : "left");
+
+    // Apply h1Layout for level 1 headings
+    if (depth === 1 && formatTweaks.h1Layout) {
+      if (formatTweaks.h1Layout === "left") {
+        textAlign = "left";
+        cleanStyle = cleanStyle.replace(/text-align\s*:\s*[^;]+;?/gi, "text-align: left;");
+      } else if (formatTweaks.h1Layout === "right") {
+        textAlign = "right";
+        cleanStyle = cleanStyle.replace(/text-align\s*:\s*[^;]+;?/gi, "text-align: right;");
+      } else {
+        textAlign = "center";
+        cleanStyle = cleanStyle.replace(/text-align\s*:\s*[^;]+;?/gi, "text-align: center;");
+      }
+    }
+
+    // Apply h2Layout for level 2 headings
+    if (depth === 2 && formatTweaks.h2Layout) {
+      if (formatTweaks.h2Layout === "left") {
+        textAlign = "left";
+        cleanStyle = cleanStyle.replace(/text-align\s*:\s*[^;]+;?/gi, "text-align: left;");
+      } else if (formatTweaks.h2Layout === "right") {
+        textAlign = "right";
+        cleanStyle = cleanStyle.replace(/text-align\s*:\s*[^;]+;?/gi, "text-align: right;");
+      } else {
+        textAlign = "center";
+        cleanStyle = cleanStyle.replace(/text-align\s*:\s*[^;]+;?/gi, "text-align: center;");
+      }
+    }
 
     const isInline = cleanStyle.includes("display: inline-block");
 

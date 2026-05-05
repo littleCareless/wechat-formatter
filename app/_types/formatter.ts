@@ -2,6 +2,8 @@ export type ActiveTab = "input" | "preview" | "settings";
 
 export type AiProviderType = "openrouter" | "openai" | "anthropic";
 
+export type H1LayoutType = "left" | "center" | "right";
+
 export type FormatTweaks = {
   fontSize: number;
   lineHeight: number;
@@ -14,6 +16,8 @@ export type FormatTweaks = {
   letterSpacing: number;
   imageRadius: number;
   themeColor?: string;
+  h1Layout: H1LayoutType;
+  h2Layout: H1LayoutType;
 };
 
 export type OpenRouterModel = {

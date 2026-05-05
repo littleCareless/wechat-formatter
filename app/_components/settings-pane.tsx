@@ -7,9 +7,9 @@ import {
   SlidersHorizontal,
   Sparkles,
 } from "lucide-react";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import type React from "react";
-import type { ActiveTab, FormatTweaks } from "../_types/formatter";
+import type { ActiveTab, FormatTweaks, H1LayoutType } from "../_types/formatter";
 import type { TemplateConfig } from "../template-engine";
 
 type TemplateGroup = {
@@ -102,9 +102,28 @@ export function SettingsPane({
 }: SettingsPaneProps) {
   const [isTemplatesOpen, setIsTemplatesOpen] = useState(true);
   const [isTweaksOpen, setIsTweaksOpen] = useState(false);
+  const [isAtStart, setIsAtStart] = useState(true);
+  const categoryScrollRef = useRef<HTMLDivElement>(null);
 
   const updateFormatTweaks = <K extends keyof FormatTweaks>(key: K, value: FormatTweaks[K]) => {
     setFormatTweaks((current) => ({ ...current, [key]: value }));
+  };
+
+  const checkScrollPosition = () => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    setIsAtStart(el.scrollLeft < 10);
+  };
+
+  const toggleCategoryScroll = () => {
+    const el = categoryScrollRef.current;
+    if (!el) return;
+    if (isAtStart) {
+      el.scrollTo({ left: el.scrollWidth, behavior: "smooth" });
+    } else {
+      el.scrollTo({ left: 0, behavior: "smooth" });
+    }
+    setTimeout(checkScrollPosition, 350);
   };
 
   const currentTemplate = groupedTemplates
@@ -138,7 +157,11 @@ export function SettingsPane({
         {isTemplatesOpen && (
           <>
             <div className="relative shrink-0 bg-(--neo-sub-header) border-b-[3px] border-(--neo-ink)">
-              <div className="flex gap-2 overflow-x-auto px-2 py-2 pr-14 scrollbar-hide">
+              <div
+                ref={categoryScrollRef}
+                onScroll={checkScrollPosition}
+                className="flex gap-2 overflow-x-auto px-2 py-2 pr-14 scrollbar-hide"
+              >
                 {groupedTemplates.map((cat) => (
                   <button
                     key={cat.id}
@@ -150,13 +173,14 @@ export function SettingsPane({
                 ))}
               </div>
               <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center bg-linear-to-l from-(--neo-sub-header) via-(--neo-sub-header) to-transparent pl-6 pr-2">
-                <span
-                  className="flex items-center justify-center border-2 border-(--neo-ink) bg-(--neo-yellow) p-1 shadow-[2px_2px_0_0_(--neo-ink)] text-[#151515]"
-                  title="左右滑动切换分类"
-                  aria-hidden
+                <button
+                  onClick={toggleCategoryScroll}
+                  className="pointer-events-auto flex items-center justify-center border-2 border-(--neo-ink) bg-(--neo-yellow) p-1 shadow-[2px_2px_0_0_(--neo-ink)] text-[#151515] active:translate-x-0.5 active:translate-y-0.5 active:shadow-none"
+                  title={isAtStart ? "查看后面的分类" : "查看前面的分类"}
+                  type="button"
                 >
                   <ArrowLeftRight className="w-3.5 h-3.5" strokeWidth={3} />
-                </span>
+                </button>
               </div>
             </div>
 
@@ -171,6 +195,8 @@ export function SettingsPane({
                         setCurrentTemplateId(template.id);
                         // 同步颜色到调色板
                         updateFormatTweaks("themeColor", template.themeColor);
+                        // 同步二级标题排版到模板默认值
+                        updateFormatTweaks("h2Layout", template.defaultH2Layout);
                       }}
                       className={`relative p-2 border-2 border-(--neo-ink) text-center transition-all duration-200 flex flex-col gap-1 items-center justify-center bg-(--neo-surface) shadow-[3px_3px_0_0_(--neo-ink)] active:translate-x-0.75 active:translate-y-0.75 active:shadow-none ${
                         currentTemplateId === template.id
@@ -327,6 +353,56 @@ export function SettingsPane({
                     }`}
                   />
                 </button>
+              </div>
+
+              <div className="space-y-2">
+                <div className="text-xs font-black text-(--neo-ink)">一级标题排版</div>
+                <div className="flex gap-2">
+                  {[
+                    { value: "left" as H1LayoutType, label: "居左", desc: "标题左对齐" },
+                    { value: "center" as H1LayoutType, label: "居中", desc: "标题居中显示" },
+                    { value: "right" as H1LayoutType, label: "居右", desc: "标题右对齐" },
+                  ].map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => updateFormatTweaks("h1Layout", option.value)}
+                      className={`flex-1 px-3 py-2 text-xs font-black border-2 border-(--neo-ink) transition-all duration-200 ${
+                        formatTweaks.h1Layout === option.value
+                          ? "bg-(--neo-yellow) shadow-[2px_2px_0_0_(--neo-ink)]"
+                          : "bg-(--neo-surface) hover:bg-(--neo-cyan)"
+                      }`}
+                      title={option.desc}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                <div className="text-xs font-black text-(--neo-ink)">二级标题排版</div>
+                <div className="flex gap-2">
+                  {[
+                    { value: "left" as H1LayoutType, label: "居左", desc: "标题左对齐" },
+                    { value: "center" as H1LayoutType, label: "居中", desc: "标题居中显示" },
+                    { value: "right" as H1LayoutType, label: "居右", desc: "标题右对齐" },
+                  ].map((option) => (
+                    <button
+                      key={option.value}
+                      type="button"
+                      onClick={() => updateFormatTweaks("h2Layout", option.value)}
+                      className={`flex-1 px-3 py-2 text-xs font-black border-2 border-(--neo-ink) transition-all duration-200 ${
+                        formatTweaks.h2Layout === option.value
+                          ? "bg-(--neo-yellow) shadow-[2px_2px_0_0_(--neo-ink)]"
+                          : "bg-(--neo-surface) hover:bg-(--neo-cyan)"
+                      }`}
+                      title={option.desc}
+                    >
+                      {option.label}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="border-2 border-(--neo-ink) bg-(--neo-surface) p-3 space-y-3">
