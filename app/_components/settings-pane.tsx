@@ -105,6 +105,30 @@ export function SettingsPane({
   const [isAtStart, setIsAtStart] = useState(true);
   const categoryScrollRef = useRef<HTMLDivElement>(null);
 
+  // 拖拽滚动逻辑
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+
+  const handleMouseDown = (e: React.MouseEvent) => {
+    if (!categoryScrollRef.current) return;
+    setIsDragging(true);
+    setStartX(e.pageX - categoryScrollRef.current.offsetLeft);
+    setScrollLeftState(categoryScrollRef.current.scrollLeft);
+  };
+
+  const handleMouseLeaveOrUp = () => {
+    setIsDragging(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent) => {
+    if (!isDragging || !categoryScrollRef.current) return;
+    e.preventDefault();
+    const x = e.pageX - categoryScrollRef.current.offsetLeft;
+    const walk = (x - startX) * 1.5; // 滚动速度
+    categoryScrollRef.current.scrollLeft = scrollLeftState - walk;
+  };
+
   const updateFormatTweaks = <K extends keyof FormatTweaks>(key: K, value: FormatTweaks[K]) => {
     setFormatTweaks((current) => ({ ...current, [key]: value }));
   };
@@ -160,7 +184,11 @@ export function SettingsPane({
               <div
                 ref={categoryScrollRef}
                 onScroll={checkScrollPosition}
-                className="flex gap-2 overflow-x-auto px-2 py-2 pr-14 scrollbar-hide"
+                onMouseDown={handleMouseDown}
+                onMouseLeave={handleMouseLeaveOrUp}
+                onMouseUp={handleMouseLeaveOrUp}
+                onMouseMove={handleMouseMove}
+                className={`flex gap-2 overflow-x-auto px-2 py-2 pr-14 scrollbar-hide cursor-grab active:cursor-grabbing select-none`}
               >
                 {groupedTemplates.map((cat) => (
                   <button
