@@ -1,10 +1,8 @@
 import { 
   SITE_BRAND, 
-  SITE_DESCRIPTION, 
   SITE_HOST, 
-  SITE_PRODUCT_NAME 
 } from "@/lib/site-config";
-import { CheckCircle2, HelpCircle, Info, Zap } from "lucide-react";
+import { CheckCircle2, HelpCircle, Info } from "lucide-react";
 
 export function AboutSection() {
   return (

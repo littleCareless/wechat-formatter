@@ -1,4 +1,4 @@
-import { CircleDollarSign, Copy, Moon, Star, Sun } from "lucide-react";
+import { CircleDollarSign, Copy, Moon, Send, Star, Sun } from "lucide-react";
 import type React from "react";
 import type { ActiveTab } from "../_types/formatter";
 
@@ -6,6 +6,7 @@ type AppHeaderProps = {
   isDarkMode: boolean;
   toggleDarkMode: () => void;
   onShowReward: () => void;
+  onShowWeChatSync: () => void;
   onCopy: () => void;
   hasContent: boolean;
   activeTab: ActiveTab;
@@ -16,6 +17,7 @@ export function AppHeader({
   isDarkMode,
   toggleDarkMode,
   onShowReward,
+  onShowWeChatSync,
   onCopy,
   hasContent,
   activeTab,
@@ -63,12 +65,20 @@ export function AppHeader({
             <span className="text-xs font-black hidden sm:inline">Star</span>
           </a>
           <button
+            onClick={onShowWeChatSync}
+            className="neo-button neo-button-secondary px-4 py-2 flex items-center gap-2 text-sm"
+            disabled={!hasContent}
+          >
+            <Send className="w-4 h-4 hidden sm:block" />
+            同步草稿
+          </button>
+          <button
             onClick={onCopy}
             className="neo-button neo-button-primary px-4 py-2 sm:px-6 sm:py-2.5 flex items-center gap-2 text-sm sm:text-base"
             disabled={!hasContent}
           >
             <Copy className="w-5 h-5 hidden sm:block" />
-            一键复制发布
+            一键复制
           </button>
         </div>
       </div>

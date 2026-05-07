@@ -60,7 +60,6 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: "/favicon.ico",
-    apple: "/logo.png",
   },
   alternates: {
     canonical: SITE_URL,
@@ -113,18 +112,22 @@ export default function RootLayout({
     >
       <head>
         <JsonLd />
-        <Script
-          src="https://www.googletagmanager.com/gtag/js?id=G-E96JLD0RWJ"
-          strategy="beforeInteractive"
-        />
-        <Script id="google-analytics" strategy="beforeInteractive">
-          {`
-            window.dataLayer = window.dataLayer || [];
-            function gtag(){dataLayer.push(arguments);}
-            gtag('js', new Date());
-            gtag('config', 'G-E96JLD0RWJ');
-          `}
-        </Script>
+        {process.env.NODE_ENV === "production" && (
+          <>
+            <Script
+              src="https://www.googletagmanager.com/gtag/js?id=G-E96JLD0RWJ"
+              strategy="afterInteractive"
+            />
+            <Script id="google-analytics" strategy="afterInteractive">
+              {`
+                window.dataLayer = window.dataLayer || [];
+                function gtag(){dataLayer.push(arguments);}
+                gtag('js', new Date());
+                gtag('config', 'G-E96JLD0RWJ');
+              `}
+            </Script>
+          </>
+        )}
         <Script id="theme-init" strategy="beforeInteractive">
           {`
             (function() {
