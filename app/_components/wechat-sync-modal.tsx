@@ -39,6 +39,16 @@ export function WeChatSyncModal({
       setErrorDetails("");
       setStatus("idle");
       
+      // 恢复自动探测（仅针对 Vercel 等线上环境有效）
+      fetch("/api/wechat/ip")
+        .then(res => res.json())
+        .then(data => {
+          if (data.ip && !data.ip.includes("本地")) {
+            setServerIp(data.ip);
+          }
+        })
+        .catch(() => {});
+      
       // 自动尝试从 HTML 提取第一张图作为默认封面预览
       const imgMatch = html.match(/<img[^>]+src="([^">]+)"/i);
       if (imgMatch) {
