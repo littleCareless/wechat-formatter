@@ -1,4 +1,5 @@
 import { CircleDollarSign, Copy, Moon, Send, Star, Sun } from "lucide-react";
+import Link from "next/link";
 import type React from "react";
 import type { ActiveTab } from "../_types/formatter";
 
@@ -26,7 +27,10 @@ export function AppHeader({
   return (
     <header className="bg-(--neo-app-header) border-b-[3px] border-(--neo-ink) sticky top-0 z-20">
       <div className="max-w-[1600px] mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
-        <div className="flex items-center gap-3">
+        <Link
+          href="/"
+          className="flex items-center gap-3 hover:opacity-80 transition-opacity"
+        >
           <img
             src="/logo.png"
             alt="TypeZen"
@@ -37,7 +41,7 @@ export function AppHeader({
           <h1 className="text-lg sm:text-2xl font-black tracking-tight uppercase text-(--neo-on-header)">
             TypeZen · AI 公众号排版助手
           </h1>
-        </div>
+        </Link>
 
         <div className="flex items-center gap-3">
           <button
