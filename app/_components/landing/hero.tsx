@@ -19,7 +19,7 @@ export function LandingHero() {
       </h1>
       
       <p className="text-xl md:text-2xl text-(--neo-muted) mb-12 max-w-3xl font-black leading-tight">
-        TypeZen 是一款专为公众号设计的 Markdown 智能排版助手。集成了 72+ 精美模板、AI 一键结构优化与微信官方同步 API，助您在 1 分钟内完成从纯文本到专业排版的蜕变。
+        TypeZen 是一款专为公众号设计的 Markdown 智能排版助手。集成了 72+ 精美模板、AI 一键结构优化与微信官方同步 API，大幅缩短从纯文本到专业排版的流程。
       </p>
 
       <div className="flex flex-col sm:flex-row gap-6">

@@ -48,7 +48,7 @@ export function LandingHowItWorks() {
             从输入到发布的完整流程
           </h2>
           <p className="text-xl font-bold text-(--neo-muted) max-w-2xl mx-auto">
-            TypeZen 打通了公众号排版的每一个痛点，只需简单的几步，即可享受极致的创作体验。
+            TypeZen 针对公众号排版痛点设计，只需简单的几步，即可享受高效流畅的创作流程。
           </p>
         </div>
 

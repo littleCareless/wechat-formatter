@@ -7,7 +7,14 @@ export function AppFooter() {
   return (
     <footer className="bg-(--neo-app-header) border-t-[3px] border-(--neo-ink) py-2 px-4 shrink-0">
       <div className="max-w-[1600px] mx-auto flex flex-row justify-between items-center gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          <img
+            src="/logo.png"
+            alt="TypeZen"
+            width={20}
+            height={20}
+            className="w-5 h-5 p-0.5 border border-(--neo-ink) bg-white shadow-[1.5px_1.5px_0_0_var(--neo-ink)]"
+          />
           <span className="font-black text-sm tracking-tighter uppercase text-(--neo-ink)">
             {SITE_BRAND}
           </span>

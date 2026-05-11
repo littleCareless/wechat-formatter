@@ -4,7 +4,7 @@ const features = [
   {
     icon: <Sparkles className="w-8 h-8" />,
     title: "AI 智能结构优化",
-    description: "接入 OpenAI, Anthropic 及 OpenRouter 顶级模型，一键修复标题层级、添加空行、规范列表，支持自定义 AI 提示词。",
+    description: "接入 OpenAI, Anthropic 及 OpenRouter 顶级模型，一键自动修复标题层级、添加空行、规范列表，让排版逻辑更清晰。",
     color: "var(--neo-pink)"
   },
   {
@@ -49,7 +49,7 @@ export function LandingFeatures() {
             核心功能特性
           </h2>
           <p className="text-xl font-bold text-(--neo-muted) max-w-2xl mx-auto">
-            TypeZen 不仅仅是一个简单的格式转换器，它是您内容创作的超级加速器。
+            TypeZen 提供从 Markdown 编辑到微信同步的全链路功能，显著提升内容创作效率。
           </p>
         </div>
         
