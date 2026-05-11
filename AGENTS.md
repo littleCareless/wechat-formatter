@@ -248,3 +248,10 @@ npm run lint
 - 已完成样式微调能力：字号、行高、段落间距、首行缩进、页面留白、字间距、图片圆角和主题色
 - 已完成站点配置常量化，metadata、JSON-LD、manifest、robots、sitemap 共用 `lib/site-config.ts` 的品牌与 URL 信息
 - 已迁移到 Biome 进行代码检查与格式化
+
+### 商业化规划记录
+
+- 详细商业化与实施路线见 `docs/product/2026-05-11-commercialization-roadmap.md`
+- 核心方向：TypeZen 从单纯「Markdown 转微信公众号排版工具」升级为「Markdown 写作者和小内容团队的多平台发布自动化工具」
+- 第一阶段付费价值聚焦微信公众号草稿箱自动同步、图片转存、封面处理、固定出口 IP 和同步错误诊断
+- 后续平台扩展必须通过 platform adapter 架构推进，避免把 X/Twitter、小红书、知乎等能力硬编码进微信同步链路
