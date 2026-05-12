@@ -33,7 +33,7 @@ app.use("/wechat/draft", async (c, next) => {
 app.post("/wechat/draft", async (c) => {
   // 1. 读取 raw body（HMAC 需要原始字符串）
   const rawBody = await c.req.text();
-  if (rawBody.length > MAX_BODY_BYTES) {
+  if (Buffer.byteLength(rawBody, "utf8") > MAX_BODY_BYTES) {
     return c.json(
       { success: false, error: "请求体过大", details: `上限 ${MAX_BODY_BYTES / 1024 / 1024} MB` } satisfies WorkerResult,
       413,

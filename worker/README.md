@@ -38,8 +38,9 @@ Multi-account (optional): `WECHAT_ACCOUNTS=wx123:secret1,wx456:secret2`
    ```bash
    ssh user@your-vps
    cd /opt/typezen-worker
-   npm ci --omit=dev
+   npm ci
    npm run build
+   npm prune --omit=dev
    ```
 
 4. Create a `.env` file (do NOT commit):
