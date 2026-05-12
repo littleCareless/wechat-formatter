@@ -1,7 +1,7 @@
 import { type NextRequest, NextResponse } from "next/server";
 import { verifyLicense } from "../../../_lib/license";
 import { getWeChatAdapter } from "../../../_lib/publishing/adapters";
-import type { CanonicalArticle } from "../../../_lib/publishing/types";
+import type { CanonicalArticle, WeChatCredentials } from "../../../_lib/publishing/types";
 import type { WeChatSyncRequest } from "../../../_types/wechat";
 
 export const runtime = "nodejs";
@@ -37,14 +37,14 @@ export async function POST(req: NextRequest) {
     };
 
     const adapter = getWeChatAdapter();
-    const result = await adapter.createDraft({
-      article,
-      credentials: {
-        appId: config.appId,
-        appSecret: config.appSecret,
-        author: config.author,
-      },
-    });
+    const isRemote = !!process.env.SYNC_WORKER_URL;
+    const credentials: WeChatCredentials = {
+      appId: config.appId,
+      author: config.author,
+      // 只有本地 adapter 需要 appSecret；remote adapter 由 worker 自行持有
+      ...(isRemote ? {} : { appSecret: config.appSecret }),
+    };
+    const result = await adapter.createDraft({ article, credentials });
 
     if (!result.success) {
       const status = result.error === "微信授权失败" ? 401 : 500;

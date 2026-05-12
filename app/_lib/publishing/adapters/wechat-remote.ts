@@ -1,3 +1,4 @@
+import { createHash, createHmac, randomUUID } from "node:crypto";
 import type {
   CreateDraftInput,
   CreateDraftResult,
@@ -13,9 +14,36 @@ const capabilities: PlatformCapabilities = {
   supportsDraft: true,
 };
 
+function sha256Hex(data: string): string {
+  return createHash("sha256").update(data).digest("hex");
+}
+
+function hmacSign(payload: string, secret: string): string {
+  return createHmac("sha256", secret).update(payload).digest("hex");
+}
+
+/**
+ * 构造 HMAC 签名头。
+ * 签名算法：HMAC-SHA256(`${timestamp}\n${nonce}\n${SHA256(body)}`, secret)
+ */
+function buildHmacHeaders(body: string, secret: string): Record<string, string> {
+  const timestamp = Math.floor(Date.now() / 1000).toString();
+  const nonce = randomUUID();
+  const bodyHash = sha256Hex(body);
+  const payload = `${timestamp}\n${nonce}\n${bodyHash}`;
+  const signature = hmacSign(payload, secret);
+
+  return {
+    "Content-Type": "application/json",
+    "X-TypeZen-Timestamp": timestamp,
+    "X-TypeZen-Nonce": nonce,
+    "X-TypeZen-Signature": signature,
+  };
+}
+
 async function createDraft(input: CreateDraftInput): Promise<CreateDraftResult> {
   const workerUrl = process.env.SYNC_WORKER_URL;
-  const workerSecret = process.env.SYNC_WORKER_SECRET;
+  const hmacSecret = process.env.SYNC_WORKER_HMAC_SECRET;
 
   if (!workerUrl) {
     return {
@@ -24,27 +52,32 @@ async function createDraft(input: CreateDraftInput): Promise<CreateDraftResult> 
     };
   }
 
-  // TODO: 实现 HMAC 签名请求
-  // 1. 构造请求 body：{ article, credentials: { appId } }
-  //    注意：不传 AppSecret 给 worker，worker 应独立持有或通过安全通道获取
-  // 2. 计算 HMAC-SHA256 签名，header: X-TypeZen-Signature
-  // 3. 设置超时和重试策略
-  // 4. 解析 worker 响应并映射为 CreateDraftResult
+  if (!hmacSecret) {
+    return {
+      success: false,
+      error: "Sync worker HMAC 密钥未配置",
+    };
+  }
 
-  const body = {
-    article: input.article,
-    credentials: { appId: input.credentials.appId },
-  };
+  // 构造请求体：只发 article + appId，不发 appSecret / licenseKey
+  const body = JSON.stringify({
+    article: {
+      title: input.article.title,
+      html: input.article.html,
+      digest: input.article.digest,
+      author: input.article.author,
+      coverImage: input.article.coverImage,
+    },
+    appId: input.credentials.appId,
+  });
+
+  const headers = buildHmacHeaders(body, hmacSecret);
 
   try {
-    const res = await fetch(`${workerUrl}/api/wechat/sync`, {
+    const res = await fetch(`${workerUrl}/wechat/draft`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        // TODO: 添加 HMAC 签名 header
-        ...(workerSecret ? { "X-TypeZen-Worker-Secret": workerSecret } : {}),
-      },
-      body: JSON.stringify(body),
+      headers,
+      body,
       signal: AbortSignal.timeout(30_000),
     });
 
