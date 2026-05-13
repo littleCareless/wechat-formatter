@@ -157,30 +157,6 @@ export function WeChatSyncModal({
     }
   };
 
-  const handleDetectIp = async () => {
-    setStatus("authorizing");
-    setErrorDetails("");
-
-    try {
-      const response = await fetch("/api/wechat/ip");
-      const data = (await response.json()) as { ip?: string; isManualRequired?: boolean };
-      const detectedIp = data.ip?.trim();
-
-      if (detectedIp && !data.isManualRequired) {
-        setServerIp(detectedIp);
-        showToast("出口 IP 已获取", "success");
-      } else {
-        setErrorDetails(detectedIp || "暂时无法自动获取出口 IP");
-        showToast("暂时无法自动获取出口 IP", "error");
-      }
-    } catch (err: unknown) {
-      setErrorDetails(err instanceof Error ? err.message : "IP 探测失败");
-      showToast("IP 探测失败，请稍后重试", "error");
-    } finally {
-      setStatus("idle");
-    }
-  };
-
   const handleSaveConfig = () => {
     onSaveConfig(draftConfig);
     showToast("配置已保存到本地", "success");
@@ -604,7 +580,7 @@ export function WeChatSyncModal({
 
                   <div className="space-y-2">
                     <button
-                      onClick={handleDetectIp}
+                      onClick={handleSync}
                       disabled={
                         status === "authorizing" ||
                         status === "uploading_images" ||
@@ -622,35 +598,24 @@ export function WeChatSyncModal({
                       {serverIp ? "重新探测 IP" : "点击探测精准出口 IP"}
                     </button>
 
-                    <div className="bg-white/30 border-2 border-(--neo-ink) p-4 space-y-3">
-                      <p className="text-xs font-black flex items-center gap-1">
-                        <HelpCircle className="w-3.5 h-3.5" /> 如何获取凭证与配置 IP？
+                    <div className="bg-white/30 border-2 border-(--neo-ink) p-3 space-y-2">
+                      <p className="text-[10px] font-black flex items-center gap-1">
+                        <HelpCircle className="w-3 h-3" /> 如何配置？
                       </p>
-                      <ol className="text-[10px] font-bold list-decimal list-inside space-y-2 text-(--neo-ink)/80">
-                        <li>
-                          登录 <span className="underline">微信开发者平台</span>{" "}
-                          (developers.weixin.qq.com/console)
-                        </li>
-                        <li>选择对应的公众号 &gt; 基础信息</li>
-                        <li>在此页面可直接获取 AppID 和获取/重置 AppSecret</li>
-                        <li>
-                          <span className="text-(--neo-pink) font-black">关键步骤：</span>
-                          将上方捕获的 IP 地址填入微信后台的{" "}
-                          <span className="underline">IP白名单</span> 中。
-                        </li>
-                        <li>
-                          生效通常需要{" "}
-                          <span className="text-(--neo-pink) font-black">1-3 分钟</span>。
-                        </li>
-                      </ol>
-                      <a
-                        href="https://developers.weixin.qq.com/console/index"
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-[10px] font-black underline flex items-center gap-1 mt-2 hover:text-(--neo-pink) transition-colors"
-                      >
-                        前往微信开发者平台 <ExternalLink className="w-2.5 h-2.5" />
-                      </a>
+                      <p className="text-[10px] font-medium leading-relaxed">
+                        1. 复制上方 IP <br />
+                        2. 登录 <span className="font-bold underline">微信公众平台</span> <br />
+                        3. 进入{" "}
+                        <span className="font-bold underline">
+                          设置与开发 - 基本配置 - IP白名单
+                        </span>{" "}
+                        <br />
+                        4. 粘贴并保存。生效通常需要{" "}
+                        <span className="text-(--neo-pink) font-bold">1-3 分钟</span>。
+                      </p>
+                      <p className="text-[9px] font-bold text-(--neo-ink)/70 leading-relaxed italic">
+                        提示：如果上面显示的 IP 与微信提示不符，请点击探测按钮。我们会通过一次授权失败来捕获微信看到的真实出口 IP。
+                      </p>
                     </div>
                   </div>
                 </div>
