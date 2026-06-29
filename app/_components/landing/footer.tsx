@@ -116,10 +116,13 @@ export function LandingFooter() {
             </p>
           </div>
           <div className="flex gap-6 text-xs font-bold text-(--neo-muted)">
-            <Link href="/" className="hover:text-(--neo-ink) transition-colors">
+            <Link href="/about" className="hover:text-(--neo-ink) transition-colors">
+              关于我们
+            </Link>
+            <Link href="/privacy" className="hover:text-(--neo-ink) transition-colors">
               隐私政策
             </Link>
-            <Link href="/" className="hover:text-(--neo-ink) transition-colors">
+            <Link href="/terms" className="hover:text-(--neo-ink) transition-colors">
               服务条款
             </Link>
           </div>

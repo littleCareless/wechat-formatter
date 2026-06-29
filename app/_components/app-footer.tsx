@@ -1,4 +1,5 @@
-import { SITE_BRAND, SITE_HOST, SITE_URL } from "@/lib/site-config";
+import Link from "next/link";
+import { SITE_BRAND, SITE_GITHUB_URL, SITE_HOST, SITE_URL } from "@/lib/site-config";
 import { Heart, Star } from "lucide-react";
 
 export function AppFooter() {
@@ -31,8 +32,20 @@ export function AppFooter() {
             </a>
           </div>
           <div className="h-4 w-[1px] bg-(--neo-ink) opacity-20 hidden md:block" />
+          <div className="hidden lg:flex items-center gap-3 text-[10px] font-bold text-(--neo-muted)">
+            <Link href="/about" className="hover:text-(--neo-ink) transition-colors">
+              关于
+            </Link>
+            <Link href="/privacy" className="hover:text-(--neo-ink) transition-colors">
+              隐私
+            </Link>
+            <Link href="/terms" className="hover:text-(--neo-ink) transition-colors">
+              条款
+            </Link>
+          </div>
+          <div className="h-4 w-[1px] bg-(--neo-ink) opacity-20 hidden lg:block" />
           <a
-            href="https://github.com/mspringjade/wechat-formatter"
+            href={SITE_GITHUB_URL}
             target="_blank"
             rel="noopener noreferrer nofollow"
             className="neo-button neo-button-ghost p-1"

@@ -23,13 +23,23 @@ TypeZen 是一款专为微信公众号设计的「Markdown 转微信排版」辅
 wechat-formatter-pro/
 ├── app/
 │   ├── _components/              # 页面拆分组件（编辑区、预览区、设置面板、AI 配置弹窗等）
+│   │   └── landing/              # 落地页通用组件（header、footer、legal-layout 等）
 │   ├── _hooks/                   # 业务 hooks（AI 排版、AI 配置、复制、滚动同步、主题等）
 │   ├── _lib/                     # 页面常量（示例文案、AI localStorage keys、OpenRouter 配置）
 │   ├── _types/                   # 页面共享类型
+│   ├── about/
+│   │   └── page.tsx              # 关于我们页面
 │   ├── api/
 │   │   ├── ai-format/route.ts    # AI 一键排版接口（流式返回 Markdown）
 │   │   └── openrouter-models/    # OpenRouter 文本模型列表代理接口
-│   ├── page.tsx                  # 主页面组合组件（三栏布局）
+│   ├── editor/
+│   │   └── page.tsx              # 编辑器页面
+│   ├── not-found.tsx             # 全局 404 页面
+│   ├── privacy/
+│   │   └── page.tsx              # 隐私政策页面
+│   ├── terms/
+│   │   └── page.tsx              # 服务条款页面
+│   ├── page.tsx                  # 落地页组合组件
 │   ├── template-engine.ts        # 模板引擎和 Markdown 渲染逻辑
 │   ├── layout.tsx                # 根布局、metadata、统计脚本、主题初始化
 │   ├── json-ld.tsx               # 结构化数据
@@ -39,7 +49,7 @@ wechat-formatter-pro/
 │   ├── globals.css               # 全局样式与 Neo 风格变量
 │   └── favicon.ico               # 网站图标
 ├── lib/
-│   └── site-config.ts            # 站点品牌、标题、描述、URL 等 SEO 常量
+│   └── site-config.ts            # 站点品牌、标题、描述、URL、联系邮箱、运营主体等 SEO 常量
 ├── public/                       # 静态资源
 │   ├── logo.png                  # 网站 Logo
 │   └── reward.png                # 赞赏码图片
@@ -178,6 +188,15 @@ npm run lint
   - `app/json-ld.tsx`
   - `app/manifest.ts`
   - `app/_lib/formatter-constants.ts`
+- 法律页与站点信息（隐私政策、服务条款、关于页面、联系邮箱、运营主体、ICP）需要同步更新：
+  - `lib/site-config.ts`
+  - `app/privacy/page.tsx`
+  - `app/terms/page.tsx`
+  - `app/about/page.tsx`
+  - `app/_components/landing/footer.tsx`
+  - `app/_components/app-footer.tsx`
+  - `README.md`
+  - `AGENTS.md`
 - 当前模板数量是 72 套，分类数量是 6 类
 - 当前核心定位是：TypeZen 免费在线 Markdown 转微信公众号排版工具，支持 AI 一键优化排版结构、实时预览、样式微调和一键复制发布
 
