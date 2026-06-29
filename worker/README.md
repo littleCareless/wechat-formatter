@@ -48,7 +48,7 @@ Multi-account (optional): `WECHAT_ACCOUNTS=wx123:secret1,wx456:secret2`
 4. Create a `.env` file (do NOT commit):
    ```
    SYNC_WORKER_HMAC_SECRET=your-random-secret-here
-   WECHAT_DEFAULT_APPID=wx1234567890abcdef
+   WECHAT_DEFAULT_APPID=your-wechat-appid
    WECHAT_DEFAULT_APPSECRET=your-app-secret
    PORT=3001
    ```
