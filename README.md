@@ -1,6 +1,6 @@
 # 公众号一键排版助手 (WeChat Formatter)
 
-[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)
 [![GitHub stars](https://img.shields.io/github/stars/mspringjade/wechat-formatter.svg?style=social)](https://github.com/mspringjade/wechat-formatter/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/mspringjade/wechat-formatter.svg)](https://github.com/mspringjade/wechat-formatter/issues)
 
@@ -119,7 +119,7 @@ AI 一键排版需要你自行配置可用的模型服务 API Key。配置保存
 
 ## 开源协议
 
-本项目采用 [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/) 协议开源。
+本项目采用 [GNU Affero General Public License v3.0 (AGPL v3)](https://www.gnu.org/licenses/agpl-3.0) 协议开源。
 
 ### 允许的使用方式
 
@@ -149,7 +149,7 @@ AI 一键排版需要你自行配置可用的模型服务 API Key。配置保存
 - 保留原作者署名（mspringjade / WeChat Formatter）。
 - 提供指向本仓库的链接。
 - 说明你所做的修改。
-- 附带本协议（CC BY-NC 4.0）的文本或链接。
+- 附带本协议（AGPL v3）的文本或链接。
 
 ### 商业授权
 
