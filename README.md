@@ -1,6 +1,6 @@
 # 公众号一键排版助手 (WeChat Formatter)
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: CC BY-NC 4.0](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey.svg)](https://creativecommons.org/licenses/by-nc/4.0/)
 [![GitHub stars](https://img.shields.io/github/stars/mspringjade/wechat-formatter.svg?style=social)](https://github.com/mspringjade/wechat-formatter/stargazers)
 [![GitHub issues](https://img.shields.io/github/issues/mspringjade/wechat-formatter.svg)](https://github.com/mspringjade/wechat-formatter/issues)
 
@@ -115,6 +115,44 @@ npm run start
 由于微信公众平台仅允许 `内联样式 (inline-css)`，本系统在转换过程中已将所有样式自动映射至 DOM 的 `style=""` 属性中，确保粘贴过程零损失。
 
 AI 一键排版需要你自行配置可用的模型服务 API Key。配置保存在当前浏览器本地，排版请求会临时经过项目服务端转发到对应模型服务，请妥善保管自己的 API Key 与服务商额度。
+
+## 开源协议
+
+本项目采用 [Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/) 协议开源。
+
+### 允许的使用方式
+
+- 自由拉取、阅读、学习、研究本项目的源代码。
+- 在本地或私人环境中修改、运行、测试本项目。
+- 基于本项目进行非商业性质的学习、实验和个人工具改造。
+- 提交 Issue、Pull Request，参与社区共建。
+- 在非商业技术分享、博客、教程中引用或介绍本项目（需保留署名和协议链接）。
+
+### 禁止的商业用途
+
+**未经作者书面授权，禁止将本项目（全部或部分代码、衍生版本、二次开发产品）用于任何商业目的。** 针对本项目的实际业务场景，商业用途包括但不限于：
+
+- 直接售卖本项目的源代码、模板、主题或排版产物。
+- 将本项目部署为付费在线排版工具、SaaS 服务或提供付费托管。
+- 白标（White Label）部署后作为自有产品向客户收费。
+- 将本项目或其核心模块（模板引擎、Markdown 渲染器、微信样式内联逻辑等）打包进商业 App、小程序、浏览器插件或付费软件。
+- 用于付费教学平台、付费训练营、付费社群，或将本项目作为课程案例、实验项目进行收费。
+- 基于本项目生成或改编后出售课程材料、电子书、排版模板包、主题包。
+- 部署带广告变现、会员增值、流量分成等商业运营模式的公开版本。
+- 提供基于本项目的收费部署、代运营、技术咨询、定制开发服务。
+
+### 署名要求
+
+若基于本项目进行修改、分发或公开展示，必须：
+
+- 保留原作者署名（mspringjade / WeChat Formatter）。
+- 提供指向本仓库的链接。
+- 说明你所做的修改。
+- 附带本协议（CC BY-NC 4.0）的文本或链接。
+
+### 商业授权
+
+如需将本项目用于商业场景，请联系作者或提交 Issue 进行沟通，获取书面商业授权。
 
 ## 贡献指南
 
