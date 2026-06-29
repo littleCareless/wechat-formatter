@@ -21,7 +21,11 @@ app.use("/wechat/draft", async (c, next) => {
   const contentLength = c.req.header("content-length");
   if (contentLength && Number.parseInt(contentLength, 10) > MAX_BODY_BYTES) {
     return c.json(
-      { success: false, error: "请求体过大", details: `上限 ${MAX_BODY_BYTES / 1024 / 1024} MB` } satisfies WorkerResult,
+      {
+        success: false,
+        error: "请求体过大",
+        details: `上限 ${MAX_BODY_BYTES / 1024 / 1024} MB`,
+      } satisfies WorkerResult,
       413,
     );
   }
@@ -35,7 +39,11 @@ app.post("/wechat/draft", async (c) => {
   const rawBody = await c.req.text();
   if (Buffer.byteLength(rawBody, "utf8") > MAX_BODY_BYTES) {
     return c.json(
-      { success: false, error: "请求体过大", details: `上限 ${MAX_BODY_BYTES / 1024 / 1024} MB` } satisfies WorkerResult,
+      {
+        success: false,
+        error: "请求体过大",
+        details: `上限 ${MAX_BODY_BYTES / 1024 / 1024} MB`,
+      } satisfies WorkerResult,
       413,
     );
   }
@@ -44,7 +52,11 @@ app.post("/wechat/draft", async (c) => {
   const hmacResult = verifyHmac(c.req.raw.headers, rawBody);
   if (!hmacResult.ok) {
     return c.json(
-      { success: false, error: hmacResult.error, details: hmacResult.details } satisfies WorkerResult,
+      {
+        success: false,
+        error: hmacResult.error,
+        details: hmacResult.details,
+      } satisfies WorkerResult,
       hmacResult.status as 401,
     );
   }
@@ -54,18 +66,28 @@ app.post("/wechat/draft", async (c) => {
   try {
     body = JSON.parse(rawBody) as DraftRequest;
   } catch {
-    return c.json({ success: false, error: "参数不完整", details: "JSON 解析失败" } satisfies WorkerResult, 400);
+    return c.json(
+      { success: false, error: "参数不完整", details: "JSON 解析失败" } satisfies WorkerResult,
+      400,
+    );
   }
 
   const { article, appId } = body;
 
   // 4. 参数校验
   if (!appId) {
-    return c.json({ success: false, error: "参数不完整", details: "缺少 appId" } satisfies WorkerResult, 400);
+    return c.json(
+      { success: false, error: "参数不完整", details: "缺少 appId" } satisfies WorkerResult,
+      400,
+    );
   }
   if (!article || !article.title || !article.html) {
     return c.json(
-      { success: false, error: "参数不完整", details: "缺少 article.title 或 article.html" } satisfies WorkerResult,
+      {
+        success: false,
+        error: "参数不完整",
+        details: "缺少 article.title 或 article.html",
+      } satisfies WorkerResult,
       400,
     );
   }
@@ -80,7 +102,12 @@ app.post("/wechat/draft", async (c) => {
   // 6. 执行微信 API 调用
   const result = await createWeChatDraft(appId, appSecret, article);
 
-  const status = (result.success ? 200 : mapErrorStatus(result.error)) as 200 | 400 | 401 | 403 | 500;
+  const status = (result.success ? 200 : mapErrorStatus(result.error)) as
+    | 200
+    | 400
+    | 401
+    | 403
+    | 500;
   return c.json(result, status);
 });
 
@@ -110,7 +137,9 @@ const port = Number.parseInt(process.env.PORT || "3001", 10);
 
 console.log(`TypeZen Sync Worker starting on port ${port}`);
 console.log(`WeChat accounts loaded: ${accountCount()}`);
-console.log(`HMAC secret configured: ${process.env.SYNC_WORKER_HMAC_SECRET ? "yes" : "NO — requests will be rejected"}`);
+console.log(
+  `HMAC secret configured: ${process.env.SYNC_WORKER_HMAC_SECRET ? "yes" : "NO — requests will be rejected"}`,
+);
 
 serve({ fetch: app.fetch, port }, (info) => {
   console.log(`Worker listening on http://0.0.0.0:${info.port}`);

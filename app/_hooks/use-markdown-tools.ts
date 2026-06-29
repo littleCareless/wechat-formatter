@@ -39,11 +39,7 @@ export function useMarkdownTools({
       const selectedText = inputText.substring(start, end);
       const textToInsert = selectedText || placeholder;
       const newText =
-        inputText.substring(0, start) +
-        prefix +
-        textToInsert +
-        suffix +
-        inputText.substring(end);
+        inputText.substring(0, start) + prefix + textToInsert + suffix + inputText.substring(end);
 
       setInputText(newText);
 
@@ -68,14 +64,18 @@ export function useMarkdownTools({
       const selectedText = inputText.substring(start, end);
       const prefix = "#".repeat(level) + " ";
       const textToInsert = selectedText || "标题";
-      const newText = inputText.substring(0, start) + prefix + textToInsert + inputText.substring(end);
+      const newText =
+        inputText.substring(0, start) + prefix + textToInsert + inputText.substring(end);
 
       setInputText(newText);
 
       setTimeout(() => {
         textarea.focus();
         textarea.scrollTop = scrollTop;
-        textarea.setSelectionRange(start + prefix.length, start + prefix.length + textToInsert.length);
+        textarea.setSelectionRange(
+          start + prefix.length,
+          start + prefix.length + textToInsert.length,
+        );
       }, 0);
     },
     [inputRef, inputText, setInputText],
@@ -96,14 +96,18 @@ export function useMarkdownTools({
       else if (type === "tl") prefix = "- [ ] ";
 
       const textToInsert = selectedText || "列表项";
-      const newText = inputText.substring(0, start) + prefix + textToInsert + inputText.substring(end);
+      const newText =
+        inputText.substring(0, start) + prefix + textToInsert + inputText.substring(end);
 
       setInputText(newText);
 
       setTimeout(() => {
         textarea.focus();
         textarea.scrollTop = scrollTop;
-        textarea.setSelectionRange(start + prefix.length, start + prefix.length + textToInsert.length);
+        textarea.setSelectionRange(
+          start + prefix.length,
+          start + prefix.length + textToInsert.length,
+        );
       }, 0);
     },
     [inputRef, inputText, setInputText],
@@ -235,15 +239,7 @@ export function useMarkdownTools({
       };
       reader.readAsDataURL(file);
     },
-    [
-      imageCounterRef,
-      imageDesc,
-      inputRef,
-      inputText,
-      setImageMap,
-      setInputText,
-      setShowImageModal,
-    ],
+    [imageCounterRef, imageDesc, inputRef, inputText, setImageMap, setInputText, setShowImageModal],
   );
 
   const handleOnlineImage = useCallback(() => {
@@ -300,7 +296,9 @@ export function useMarkdownTools({
               const end = textarea.selectionEnd;
               const imageMarkdown = `\n![图片](#${imageId})\n`;
 
-              setInputText((prev) => prev.substring(0, start) + imageMarkdown + prev.substring(end));
+              setInputText(
+                (prev) => prev.substring(0, start) + imageMarkdown + prev.substring(end),
+              );
 
               setTimeout(() => {
                 textarea.focus();

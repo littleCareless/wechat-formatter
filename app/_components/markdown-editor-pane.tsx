@@ -193,25 +193,13 @@ export function MarkdownEditorPane({
 
         {/* Insert Group */}
         <div className="flex items-center gap-1">
-          <button
-            onClick={insertLink}
-            className="neo-toolbar-button p-1.5"
-            title="插入链接"
-          >
+          <button onClick={insertLink} className="neo-toolbar-button p-1.5" title="插入链接">
             <LinkIcon className="w-4 h-4" />
           </button>
-          <button
-            onClick={insertImage}
-            className="neo-toolbar-button p-1.5"
-            title="插入图片"
-          >
+          <button onClick={insertImage} className="neo-toolbar-button p-1.5" title="插入图片">
             <ImageIcon className="w-4 h-4" />
           </button>
-          <button
-            onClick={insertTable}
-            className="neo-toolbar-button p-1.5"
-            title="插入表格"
-          >
+          <button onClick={insertTable} className="neo-toolbar-button p-1.5" title="插入表格">
             <Table className="w-4 h-4" />
           </button>
           <button
@@ -234,11 +222,7 @@ export function MarkdownEditorPane({
           >
             {"</>"}
           </button>
-          <button
-            onClick={insertCodeBlock}
-            className="neo-toolbar-button p-1.5"
-            title="代码块"
-          >
+          <button onClick={insertCodeBlock} className="neo-toolbar-button p-1.5" title="代码块">
             <Code2 className="w-4 h-4" />
           </button>
           <button
@@ -248,18 +232,10 @@ export function MarkdownEditorPane({
           >
             <Quote className="w-4 h-4" />
           </button>
-          <button
-            onClick={insertSuperscript}
-            className="neo-toolbar-button p-1.5"
-            title="上标"
-          >
+          <button onClick={insertSuperscript} className="neo-toolbar-button p-1.5" title="上标">
             <Superscript className="w-4 h-4" />
           </button>
-          <button
-            onClick={insertSubscript}
-            className="neo-toolbar-button p-1.5"
-            title="下标"
-          >
+          <button onClick={insertSubscript} className="neo-toolbar-button p-1.5" title="下标">
             <Subscript className="w-4 h-4" />
           </button>
         </div>
@@ -284,8 +260,7 @@ export function MarkdownEditorPane({
             字数: <strong>{wordCount.words}</strong>
           </span>
           <span>
-            预计阅读:{" "}
-            <strong>{wordCount.readTime}分钟</strong>
+            预计阅读: <strong>{wordCount.readTime}分钟</strong>
           </span>
         </div>
         <span>支持直接粘贴图片</span>

@@ -6,7 +6,7 @@ const WECHAT_CONFIG_KEY = "typezen_wechat_config";
 const DEFAULT_CONFIG: WeChatAccountConfig = {
   appId: "",
   appSecret: "",
-  author: ""
+  author: "",
 };
 
 export function useWeChatSettings() {
@@ -35,6 +35,6 @@ export function useWeChatSettings() {
     wechatConfig,
     updateConfig,
     isConfigModalOpen,
-    setIsConfigModalOpen
+    setIsConfigModalOpen,
   };
 }

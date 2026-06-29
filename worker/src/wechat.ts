@@ -108,7 +108,7 @@ async function processHtmlImages(accessToken: string, html: string): Promise<str
 
       const filename = src.startsWith("data:image")
         ? `image.${src.match(/data:image\/([^;]+);/)?.[1] || "jpeg"}`
-        : (src.split("/").pop() || "image.jpg");
+        : src.split("/").pop() || "image.jpg";
 
       const wechatUrl = await uploadImageToWeChat(accessToken, imageBuffer, filename);
 

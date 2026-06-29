@@ -40,9 +40,7 @@ export function ImageInsertModal({
 
         <div className="space-y-4 mb-4">
           <div>
-            <label className="block text-sm font-black text-(--neo-ink) mb-1">
-              图片描述
-            </label>
+            <label className="block text-sm font-black text-(--neo-ink) mb-1">图片描述</label>
             <input
               type="text"
               value={imageDesc}
@@ -61,9 +59,7 @@ export function ImageInsertModal({
           </div>
 
           <div>
-            <label className="block text-sm font-black text-(--neo-ink) mb-1">
-              在线图片地址
-            </label>
+            <label className="block text-sm font-black text-(--neo-ink) mb-1">在线图片地址</label>
             <input
               type="text"
               value={imageUrl}
@@ -92,10 +88,7 @@ export function ImageInsertModal({
           </button>
         </div>
 
-        <button
-          onClick={onClose}
-          className="neo-button neo-button-ghost w-full mt-3 py-2.5"
-        >
+        <button onClick={onClose} className="neo-button neo-button-ghost w-full mt-3 py-2.5">
           取消
         </button>
       </div>

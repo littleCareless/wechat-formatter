@@ -8,8 +8,7 @@ type PreviewPaneProps = {
   outputHtml: string;
 };
 
-const emptyPreviewHtml =
-  '<div class="neo-preview-empty">这里空空如也，请在左侧输入内容</div>';
+const emptyPreviewHtml = '<div class="neo-preview-empty">这里空空如也，请在左侧输入内容</div>';
 
 export function PreviewPane({
   activeTab,

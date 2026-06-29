@@ -1,9 +1,5 @@
 import type { MetadataRoute } from "next";
-import {
-  SITE_BRAND,
-  SITE_DESCRIPTION,
-  SITE_PRODUCT_NAME,
-} from "@/lib/site-config";
+import { SITE_BRAND, SITE_DESCRIPTION, SITE_PRODUCT_NAME } from "@/lib/site-config";
 
 /** PWA / 「添加到主屏幕」展示名称与简介，强化 TypeZen 品牌 */
 export default function manifest(): MetadataRoute.Manifest {

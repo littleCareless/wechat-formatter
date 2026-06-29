@@ -30,12 +30,7 @@ export type WeChatSyncResponse = {
 
 // --- IP Diagnostic types ---
 
-export type WeChatIpDiagnosticStatus =
-  | "idle"
-  | "checking"
-  | "captured"
-  | "authorized"
-  | "error";
+export type WeChatIpDiagnosticStatus = "idle" | "checking" | "captured" | "authorized" | "error";
 
 export type WeChatIpDiagnosticRequest = {
   config: {

@@ -6,10 +6,6 @@ export const metadata: Metadata = {
   description: EDITOR_DESCRIPTION,
 };
 
-export default function EditorLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function EditorLayout({ children }: { children: React.ReactNode }) {
   return children;
 }

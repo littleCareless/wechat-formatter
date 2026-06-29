@@ -27,7 +27,9 @@ function constantTimeEqual(a: string, b: string): boolean {
   return timingSafeEqual(Buffer.from(a), Buffer.from(b));
 }
 
-export type HmacVerifyResult = { ok: true } | { ok: false; error: string; details: string; status: 401 | 500 };
+export type HmacVerifyResult =
+  | { ok: true }
+  | { ok: false; error: string; details: string; status: 401 | 500 };
 
 /**
  * 校验 HMAC 签名。
@@ -36,7 +38,12 @@ export type HmacVerifyResult = { ok: true } | { ok: false; error: string; detail
 export function verifyHmac(headers: Headers, rawBody: string): HmacVerifyResult {
   const secret = process.env.SYNC_WORKER_HMAC_SECRET;
   if (!secret) {
-    return { ok: false, error: "Worker 内部错误", details: "HMAC secret not configured", status: 500 };
+    return {
+      ok: false,
+      error: "Worker 内部错误",
+      details: "HMAC secret not configured",
+      status: 500,
+    };
   }
 
   const timestamp = headers.get("x-typezen-timestamp");

@@ -172,7 +172,9 @@ export function WeChatSyncModal({
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ config: { appId: draftConfig.appId, appSecret: draftConfig.appSecret } }),
+        body: JSON.stringify({
+          config: { appId: draftConfig.appId, appSecret: draftConfig.appSecret },
+        }),
       });
 
       let data: WeChatIpDiagnosticResponse;
@@ -392,7 +394,8 @@ export function WeChatSyncModal({
                         <p className="text-xs font-black">同步提示</p>
                         <p className="text-[10px] font-bold leading-relaxed text-(--neo-ink)/80">
                           同步过程将自动把正文中的外部图片、Base64
-                          图片转存到微信服务器。账号配置页可进行授权 / IP 白名单诊断；诊断只调用微信授权接口，不会上传图片或创建草稿。
+                          图片转存到微信服务器。账号配置页可进行授权 / IP
+                          白名单诊断；诊断只调用微信授权接口，不会上传图片或创建草稿。
                         </p>
                       </div>
                     </div>
@@ -645,11 +648,14 @@ export function WeChatSyncModal({
                       ) : (
                         <Star className="w-4 h-4" />
                       )}
-                      {serverIp || ipDiagnosticStatus === "authorized" ? "重新探测 IP" : "点击探测当前出口 IP"}
+                      {serverIp || ipDiagnosticStatus === "authorized"
+                        ? "重新探测 IP"
+                        : "点击探测当前出口 IP"}
                     </button>
 
                     {/* 探测结果后展示配置指引 */}
-                    {(ipDiagnosticStatus === "captured" || (serverIp && ipDiagnosticStatus !== "error")) && (
+                    {(ipDiagnosticStatus === "captured" ||
+                      (serverIp && ipDiagnosticStatus !== "error")) && (
                       <div className="bg-white/30 border-2 border-(--neo-ink) p-3 space-y-2">
                         <p className="text-[10px] font-black flex items-center gap-1">
                           <HelpCircle className="w-3 h-3" /> 如何配置？
@@ -666,7 +672,8 @@ export function WeChatSyncModal({
                           <span className="text-(--neo-pink) font-bold">1-3 分钟</span>。
                         </p>
                         <p className="text-[9px] font-bold text-(--neo-ink)/70 leading-relaxed italic">
-                          提示：如果同步再次失败，或部署平台更换了出口 IP，请点击探测按钮重新捕获当前值。
+                          提示：如果同步再次失败，或部署平台更换了出口
+                          IP，请点击探测按钮重新捕获当前值。
                         </p>
                       </div>
                     )}
@@ -675,7 +682,8 @@ export function WeChatSyncModal({
               </div>
 
               <p className="text-[9px] neo-text-muted font-bold text-center">
-                * 该检测会调用微信 access_token 接口，可能刷新公众号全局 token；TypeZen 不会保存 token，也不会保存 AppSecret。
+                * 该检测会调用微信 access_token 接口，可能刷新公众号全局 token；TypeZen 不会保存
+                token，也不会保存 AppSecret。
               </p>
             </div>
           )}

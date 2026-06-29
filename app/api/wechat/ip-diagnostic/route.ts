@@ -10,7 +10,11 @@ export async function POST(req: NextRequest) {
     body = await req.json();
   } catch {
     return NextResponse.json(
-      { success: false, status: "error", message: "请求格式错误" } satisfies WeChatIpDiagnosticResponse,
+      {
+        success: false,
+        status: "error",
+        message: "请求格式错误",
+      } satisfies WeChatIpDiagnosticResponse,
       { status: 400 },
     );
   }
@@ -18,7 +22,11 @@ export async function POST(req: NextRequest) {
   const { config } = body;
   if (!config?.appId || !config?.appSecret) {
     return NextResponse.json(
-      { success: false, status: "error", message: "缺少 AppID 或 AppSecret" } satisfies WeChatIpDiagnosticResponse,
+      {
+        success: false,
+        status: "error",
+        message: "缺少 AppID 或 AppSecret",
+      } satisfies WeChatIpDiagnosticResponse,
       { status: 400 },
     );
   }
@@ -53,7 +61,12 @@ export async function POST(req: NextRequest) {
         } satisfies WeChatIpDiagnosticResponse);
       }
 
-      if (err.errcode === 40001 || err.errcode === 40125 || err.errcode === 40013 || err.errcode === 40163) {
+      if (
+        err.errcode === 40001 ||
+        err.errcode === 40125 ||
+        err.errcode === 40013 ||
+        err.errcode === 40163
+      ) {
         return NextResponse.json({
           success: false,
           status: "invalid_credentials",
@@ -75,7 +88,12 @@ export async function POST(req: NextRequest) {
     const message = err instanceof Error ? err.message : "未知错误";
     console.error("IP diagnostic error:", message);
     return NextResponse.json(
-      { success: false, status: "error", message: "诊断请求失败，请稍后重试", details: message } satisfies WeChatIpDiagnosticResponse,
+      {
+        success: false,
+        status: "error",
+        message: "诊断请求失败，请稍后重试",
+        details: message,
+      } satisfies WeChatIpDiagnosticResponse,
       { status: 500 },
     );
   }

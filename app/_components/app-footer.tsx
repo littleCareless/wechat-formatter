@@ -26,10 +26,7 @@ export function AppFooter() {
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-1.5 text-[10px] font-black text-(--neo-ink)">
             Made with <Heart className="w-3 h-3 text-rose-500 fill-rose-500" /> by{" "}
-            <a
-              href={SITE_URL}
-              className="hover:underline underline-offset-4 decoration-2"
-            >
+            <a href={SITE_URL} className="hover:underline underline-offset-4 decoration-2">
               {SITE_BRAND} Team
             </a>
           </div>

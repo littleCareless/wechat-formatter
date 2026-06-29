@@ -27,32 +27,32 @@ export function JsonLd() {
   const faqSchema = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    "mainEntity": [
+    mainEntity: [
       {
         "@type": "Question",
-        "name": "TypeZen 是免费的吗？",
-        "acceptedAnswer": {
+        name: "TypeZen 是免费的吗？",
+        acceptedAnswer: {
           "@type": "Answer",
-          "text": "是的，TypeZen 目前完全免费提供使用。你可以自由使用所有排版模板和基础编辑功能。"
-        }
+          text: "是的，TypeZen 目前完全免费提供使用。你可以自由使用所有排版模板和基础编辑功能。",
+        },
       },
       {
         "@type": "Question",
-        "name": "AI 排版会消耗我的 Token 吗？",
-        "acceptedAnswer": {
+        name: "AI 排版会消耗我的 Token 吗？",
+        acceptedAnswer: {
           "@type": "Answer",
-          "text": "TypeZen 支持让你填入自己的 OpenAI、Anthropic 或 OpenRouter API Key，调用直接走你的账户，确保隐私与安全。"
-        }
+          text: "TypeZen 支持让你填入自己的 OpenAI、Anthropic 或 OpenRouter API Key，调用直接走你的账户，确保隐私与安全。",
+        },
       },
       {
         "@type": "Question",
-        "name": "复制到微信后台样式会乱吗？",
-        "acceptedAnswer": {
+        name: "复制到微信后台样式会乱吗？",
+        acceptedAnswer: {
           "@type": "Answer",
-          "text": "不会。我们的模板引擎专门针对微信公众号的限制进行了深度优化，确保 100% 还原预览效果。"
-        }
-      }
-    ]
+          text: "不会。我们的模板引擎专门针对微信公众号的限制进行了深度优化，确保 100% 还原预览效果。",
+        },
+      },
+    ],
   };
 
   return (

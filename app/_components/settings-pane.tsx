@@ -232,23 +232,23 @@ export function SettingsPane({
                           : "hover:bg-(--neo-cyan)"
                       }`}
                     >
-                    <div className="flex items-center justify-center gap-1.5 w-full">
-                      <span
-                        className="w-2.5 h-2.5 border-2 border-(--neo-ink) shrink-0"
-                        style={{ backgroundColor: template.themeColor }}
-                      />
-                      <span className="font-black text-xs text-(--neo-ink) truncate">
-                        {template.name}
-                      </span>
-                    </div>
-
-                    {currentTemplateId === template.id && (
-                      <div className="absolute -top-2 -right-2 bg-(--neo-green) text-[#111111] border-2 border-(--neo-ink) p-0.5 shadow-[2px_2px_0_0_(--neo-ink)]">
-                        <Check className="w-2.5 h-2.5" strokeWidth={3} />
+                      <div className="flex items-center justify-center gap-1.5 w-full">
+                        <span
+                          className="w-2.5 h-2.5 border-2 border-(--neo-ink) shrink-0"
+                          style={{ backgroundColor: template.themeColor }}
+                        />
+                        <span className="font-black text-xs text-(--neo-ink) truncate">
+                          {template.name}
+                        </span>
                       </div>
-                    )}
-                  </button>
-                ))}
+
+                      {currentTemplateId === template.id && (
+                        <div className="absolute -top-2 -right-2 bg-(--neo-green) text-[#111111] border-2 border-(--neo-ink) p-0.5 shadow-[2px_2px_0_0_(--neo-ink)]">
+                          <Check className="w-2.5 h-2.5" strokeWidth={3} />
+                        </div>
+                      )}
+                    </button>
+                  ))}
               </div>
 
               {/* 调色板工具 */}
@@ -302,9 +302,7 @@ export function SettingsPane({
           >
             <span className="flex min-w-0 flex-1 items-center gap-2">
               <SlidersHorizontal className="w-4 h-4 shrink-0 text-(--neo-ink)" />
-              <span className="text-[14px] font-black text-(--neo-ink) uppercase">
-                细节微调
-              </span>
+              <span className="text-[14px] font-black text-(--neo-ink) uppercase">细节微调</span>
             </span>
             <ChevronDown
               className={`w-4 h-4 text-(--neo-ink) transition-transform ${
@@ -370,9 +368,7 @@ export function SettingsPane({
                     updateFormatTweaks("firstLineIndent", !formatTweaks.firstLineIndent)
                   }
                   className={`relative inline-flex h-7 w-12 items-center border-[3px] border-(--neo-ink) transition-colors duration-200 focus:outline-none ${
-                    formatTweaks.firstLineIndent
-                      ? "bg-(--neo-green)"
-                      : "bg-(--neo-surface)"
+                    formatTweaks.firstLineIndent ? "bg-(--neo-green)" : "bg-(--neo-surface)"
                   }`}
                 >
                   <span
