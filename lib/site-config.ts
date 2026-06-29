@@ -1,20 +1,29 @@
 /** 站点与品牌常量（metadata、Json-Ld、robots、sitemap 共用） */
 
 export const SITE_HOST = "typezen.online" as const;
-
 export const SITE_URL = `https://${SITE_HOST}` as const;
-
 export const SITE_BRAND = "TypeZen";
-
 export const SITE_PRODUCT_NAME = "公众号一键排版助手";
 
-/** 默认 <title>：品牌前置，突出专业排版工具定位，弱化 AI 关键词的紧邻性 */
-export const SITE_TITLE_DEFAULT = `${SITE_BRAND}｜${SITE_PRODUCT_NAME} — 专业的 Markdown 转微信排版工具 · 72 套精美模板 · 智能排版优化`;
+/** 默认 <title>：首选关键词，极度精简，50-60 字符以内 */
+export const SITE_TITLE_DEFAULT = "TypeZen | 微信公众号 Markdown 智能排版工具";
 
 /**
- * <meta name="description">：首句包含品牌与域名，便于品牌词与「site:typezen.online」类检索
+ * <meta name="description">：严格控制在 40-50 字符左右
  */
-export const SITE_DESCRIPTION = `${SITE_BRAND}（${SITE_HOST}）是免费在线 Markdown 转微信公众号排版工具，支持 AI 一键优化排版结构，提供新粗野、极简、商务、文艺、科技、节庆 6 大类共 72 套精美模板，并支持实时预览、样式微调与一键复制发布。`;
+export const SITE_DESCRIPTION =
+  "TypeZen: 极简 Markdown 转微信排版。72 套模板、AI 一键优化、微信自动同步、一键复制发布，完全免费开源。";
 
-/** Open Graph site_name：品牌与产品名并列 */
-export const SITE_OG_SITE_NAME = `${SITE_BRAND} · ${SITE_PRODUCT_NAME}`;
+/** Open Graph site_name */
+export const SITE_OG_SITE_NAME = "TypeZen";
+
+/** 编辑器页面专属 Title */
+export const EDITOR_TITLE = "TypeZen 编辑器 | 实时 Markdown 转微信排版";
+
+/** 编辑器页面专属 Description */
+export const EDITOR_DESCRIPTION =
+  "TypeZen 在线编辑器：AI 智能排版，72 套精美模板，本地安全，即开即用。";
+
+/** 关键词 */
+export const SITE_KEYWORDS =
+  "TypeZen, typezen, typezen.online, 公众号排版, 微信公众号排版, Markdown 排版, 微信编辑器, 公众号编辑器, Markdown 转微信, 智能一键排版, AI 排版";

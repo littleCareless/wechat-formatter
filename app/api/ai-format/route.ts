@@ -34,10 +34,7 @@ export async function POST(req: Request) {
     };
 
     if (!markdown || typeof markdown !== "string" || !markdown.trim()) {
-      return Response.json(
-        { error: "请提供需要排版的 Markdown 内容" },
-        { status: 400 },
-      );
+      return Response.json({ error: "请提供需要排版的 Markdown 内容" }, { status: 400 });
     }
 
     if (markdown.length > MAX_INPUT_LENGTH) {
@@ -51,31 +48,20 @@ export async function POST(req: Request) {
 
     const trimmedApiKey = apiKey?.trim();
     if (!trimmedApiKey) {
-      return Response.json(
-        { error: "请先填写 API Key" },
-        { status: 400 },
-      );
+      return Response.json({ error: "请先填写 API Key" }, { status: 400 });
     }
 
     const selectedProvider: AiProviderType =
-      providerType === "anthropic" || providerType === "openai"
-        ? providerType
-        : "openrouter";
+      providerType === "anthropic" || providerType === "openai" ? providerType : "openrouter";
 
     const trimmedBaseUrl = baseUrl?.trim() || openRouterConfig.baseUrl;
     if (selectedProvider !== "openrouter" && !baseUrl?.trim()) {
-      return Response.json(
-        { error: "请先填写 API 地址" },
-        { status: 400 },
-      );
+      return Response.json({ error: "请先填写 API 地址" }, { status: 400 });
     }
 
     const trimmedModel = model?.trim();
     if (!trimmedModel) {
-      return Response.json(
-        { error: "请先填写 AI 模型名称" },
-        { status: 400 },
-      );
+      return Response.json({ error: "请先填写 AI 模型名称" }, { status: 400 });
     }
 
     const languageModel =
@@ -102,17 +88,11 @@ export async function POST(req: Request) {
 
     const message = err instanceof Error ? err.message : "";
     if (/auth|api key|unauthorized|401/i.test(message)) {
-      return Response.json(
-        { error: "API Key 无效或无权限，请检查后重试" },
-        { status: 401 },
-      );
+      return Response.json({ error: "API Key 无效或无权限，请检查后重试" }, { status: 401 });
     }
 
     if (/model|not found|404/i.test(message)) {
-      return Response.json(
-        { error: "模型不可用，请检查模型名称是否正确" },
-        { status: 400 },
-      );
+      return Response.json({ error: "模型不可用，请检查模型名称是否正确" }, { status: 400 });
     }
 
     if (/quota|credit|billing|insufficient|payment|429/i.test(message)) {
@@ -122,9 +102,6 @@ export async function POST(req: Request) {
       );
     }
 
-    return Response.json(
-      { error: message || "AI 排版服务异常，请稍后重试" },
-      { status: 500 },
-    );
+    return Response.json({ error: message || "AI 排版服务异常，请稍后重试" }, { status: 500 });
   }
 }

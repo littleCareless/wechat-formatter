@@ -1,4 +1,4 @@
-import { marked, type Tokens } from "marked";
+import { Marked, Renderer, type Tokens } from "marked";
 import type { FormatTweaks, H1LayoutType } from "./_types/formatter";
 
 export interface TemplateConfig {
@@ -497,8 +497,9 @@ export function renderArticle(
       }
     : baseTemplate;
 
-  const customRenderer = new marked.Renderer();
-  const defaultRenderer = new marked.Renderer();
+  const markedInstance = new Marked();
+  const customRenderer = new Renderer();
+  const defaultRenderer = new Renderer();
 
   const tuneBlockStyle = (
     style: string,
@@ -577,11 +578,11 @@ export function renderArticle(
 
     // Extract margin and align
     const marginMatch = s.match(/margin\s*:\s*([^;]+)/i);
-    const margin = marginMatch ? marginMatch[1] : (depth === 1 ? "32px 0" : "24px 0");
+    const margin = marginMatch ? marginMatch[1] : depth === 1 ? "32px 0" : "24px 0";
     let cleanStyle = s.replace(/margin\s*:\s*[^;]+;?/gi, "margin: 0;");
-    
+
     const textAlignMatch = cleanStyle.match(/text-align\s*:\s*([^;]+)/i);
-    let textAlign = textAlignMatch ? textAlignMatch[1] : (depth === 1 ? "center" : "left");
+    let textAlign = textAlignMatch ? textAlignMatch[1] : depth === 1 ? "center" : "left";
 
     // Apply h1Layout for level 1 headings
     if (depth === 1 && formatTweaks.h1Layout) {
@@ -652,7 +653,7 @@ export function renderArticle(
         // Multi-image layout using inline-block (Highly compatible, avoids table and flex)
         const gapWidth = 4;
         const imgCount = imagesMatch.length;
-        const widthPercent = (100 / imgCount) - 1.5;
+        const widthPercent = 100 / imgCount - 1.5;
 
         const flexItems = imagesMatch
           .map((imgHtml: string) => {
@@ -694,37 +695,42 @@ export function renderArticle(
   customRenderer.list = function (token: Tokens.List) {
     const ordered = token.ordered;
     const start = token.start || 1;
-    
-    const itemsHtml = token.items.map((item, index) => {
-      // Use block parser for list item content
-      let inner = this.parser.parse(item.tokens);
-      // Clean up paragraph margins for the first element
-      inner = inner.replace(/^<p style="([^"]*)"/i, (m: string, s: string) => {
-        const cleanS = s.replace(/margin\s*:\s*[^;]+;?/gi, "margin: 0;");
-        return `<p style="${cleanS}"`;
-      });
-      inner = inner.replace(/<input disabled="" type="checkbox">/gi, "");
 
-      let icon = "";
-      if (item.task) {
-        icon = item.checked
-          ? `<section style="display: inline-block; width: 14px; height: 14px; line-height: 14px; text-align: center; border: 2px solid #000000; background-color: #10b981; color: #000000; font-size: 10px; font-weight: bold; margin-top: 4px; box-sizing: border-box;">√</section>`
-          : `<section style="display: inline-block; width: 14px; height: 14px; border: 2px solid #000000; background-color: #ffffff; margin-top: 4px; box-sizing: border-box; overflow: hidden;"><br/></section>`;
-      } else if (ordered) {
-        const num = start + index;
-        if (template.category === "neo-brutalism") {
-          icon = `<section style="display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; background-color: ${template.themeColor}; color: #000000; border: 2px solid #000000; font-size: 12px; font-weight: 900; box-shadow: 2px 2px 0px #000000; box-sizing: border-box; overflow: hidden;">${num}</section>`;
+    const itemsHtml = token.items
+      .map((item, index) => {
+        // Use block parser for list item content
+        let inner = this.parser.parse(item.tokens);
+        // Clean up paragraph margins for the first element
+        inner = inner.replace(/^<p style="([^"]*)"/i, (m: string, s: string) => {
+          const cleanS = s.replace(/margin\s*:\s*[^;]+;?/gi, "margin: 0;");
+          return `<p style="${cleanS}"`;
+        });
+        // Remove checkbox spans rendered by customRenderer.checkbox to avoid double checkboxes
+        inner = inner.replace(
+          /<span style="[^"]*width: 12px; height: 12px;[^"]*">.*?<\/span>/gi,
+          "",
+        );
+
+        let icon = "";
+        if (item.task) {
+          icon = item.checked
+            ? `<section style="display: inline-block; width: 14px; height: 14px; line-height: 14px; text-align: center; border: 2px solid #000000; background-color: #10b981; color: #000000; font-size: 10px; font-weight: bold; margin-top: 4px; box-sizing: border-box;">√</section>`
+            : `<section style="display: inline-block; width: 14px; height: 14px; border: 2px solid #000000; background-color: #ffffff; margin-top: 4px; box-sizing: border-box; overflow: hidden;"><br/></section>`;
+        } else if (ordered) {
+          const num = start + index;
+          if (template.category === "neo-brutalism") {
+            icon = `<section style="display: inline-block; width: 20px; height: 20px; line-height: 20px; text-align: center; background-color: ${template.themeColor}; color: #000000; border: 2px solid #000000; font-size: 12px; font-weight: 900; box-shadow: 2px 2px 0px #000000; box-sizing: border-box; overflow: hidden;">${num}</section>`;
+          } else {
+            icon = `<section style="display: inline-block; color: ${template.themeColor}; font-weight: bold; font-family: sans-serif;">${num}.</section>`;
+          }
         } else {
-          icon = `<section style="display: inline-block; color: ${template.themeColor}; font-weight: bold; font-family: sans-serif;">${num}.</section>`;
+          icon = template.listIcon;
         }
-      } else {
-        icon = template.listIcon;
-      }
 
-      const iconWidth = template.category === "neo-brutalism" ? 32 : 24;
+        const iconWidth = template.category === "neo-brutalism" ? 32 : 24;
 
-      // Extremely robust float layout for WeChat Official Accounts
-      return `<section style="display: block; clear: both; margin-bottom: 12px;">
+        // Extremely robust float layout for WeChat Official Accounts
+        return `<section style="display: block; clear: both; margin-bottom: 12px;">
         <section style="float: left; width: ${iconWidth}px; box-sizing: border-box;">
           <section style="text-align: left;">${icon}</section>
         </section>
@@ -735,7 +741,8 @@ export function renderArticle(
         </section>
         <section style="display: block; clear: both; height: 0; line-height: 0; font-size: 0; overflow: hidden;"></section>
       </section>`;
-    }).join("");
+      })
+      .join("");
 
     return `<section style="${bgFallback(template.listStyle)} padding: 0; margin: 20px 0 16px 0;">${itemsHtml}</section>`;
   };
@@ -841,13 +848,86 @@ export function renderArticle(
       : '<span style="display: inline-block; width: 12px; height: 12px; border: 1px solid #9ca3af; margin-right: 4px;"></span>';
   };
 
-  marked.setOptions({
+  markedInstance.use({
+    extensions: [
+      {
+        name: "highlight",
+        level: "inline",
+        start(src: string) {
+          return src.indexOf("==");
+        },
+        tokenizer(src: string) {
+          const match = /^==([^=]+)==/.exec(src);
+          if (match) {
+            const token = {
+              type: "highlight",
+              raw: match[0],
+              text: match[1],
+              tokens: [] as Tokens.Generic[],
+            };
+            this.lexer.inlineTokens(token.text, token.tokens);
+            return token;
+          }
+        },
+        renderer(token: Tokens.Generic) {
+          return `<mark style="background-color: ${hexToRgba(template.themeColor, 0.5)}; color: inherit; padding: 0 2px;">${this.parser.parseInline(token.tokens!)}</mark>`;
+        },
+      },
+      {
+        name: "superscript",
+        level: "inline",
+        start(src: string) {
+          return src.indexOf("^");
+        },
+        tokenizer(src: string) {
+          const match = /^\^([^^]+)\^/.exec(src);
+          if (match) {
+            const token = {
+              type: "superscript",
+              raw: match[0],
+              text: match[1],
+              tokens: [] as Tokens.Generic[],
+            };
+            this.lexer.inlineTokens(token.text, token.tokens);
+            return token;
+          }
+        },
+        renderer(token: Tokens.Generic) {
+          return `<sup>${this.parser.parseInline(token.tokens!)}</sup>`;
+        },
+      },
+      {
+        name: "subscript",
+        level: "inline",
+        start(src: string) {
+          return src.indexOf("~");
+        },
+        tokenizer(src: string) {
+          // Avoid conflict with strikethrough (~~)
+          const match = /^~([^~\s][^~]*[^~\s])~/.exec(src);
+          if (match) {
+            const token = {
+              type: "subscript",
+              raw: match[0],
+              text: match[1],
+              tokens: [] as Tokens.Generic[],
+            };
+            this.lexer.inlineTokens(token.text, token.tokens);
+            return token;
+          }
+        },
+        renderer(token: Tokens.Generic) {
+          return `<sub>${this.parser.parseInline(token.tokens!)}</sub>`;
+        },
+      },
+    ],
+  });
+
+  const innerHtml = markedInstance.parse(markdownText, {
     renderer: customRenderer,
     breaks: true,
     gfm: true,
-  });
-
-  const innerHtml = marked.parse(markdownText) as string;
+  }) as string;
   const articleContainerStyle = ensureStyleValue(
     ensureStyleValue(
       `${template.containerStyle} font-size: ${formatTweaks.fontSize}px; line-height: ${formatTweaks.lineHeight}; letter-spacing: ${formatTweaks.letterSpacing}px; color: ${template.baseStyle.color}; font-family: ${template.baseStyle.fontFamily}; word-wrap: break-word; word-break: break-all; box-sizing: border-box;`,

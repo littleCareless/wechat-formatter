@@ -37,11 +37,10 @@ export function RewardModal({ open, onClose }: RewardModalProps) {
             }}
           />
         </div>
-        <p className="text-xs neo-text-muted text-center mb-4 font-bold">微信扫码赞赏，支持开发者继续维护</p>
-        <button
-          onClick={onClose}
-          className="neo-button neo-button-ghost w-full py-2.5"
-        >
+        <p className="text-xs neo-text-muted text-center mb-4 font-bold">
+          微信扫码赞赏，支持开发者继续维护
+        </p>
+        <button onClick={onClose} className="neo-button neo-button-ghost w-full py-2.5">
           关闭
         </button>
       </div>

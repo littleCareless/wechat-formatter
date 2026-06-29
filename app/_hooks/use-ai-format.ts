@@ -1,3 +1,4 @@
+import { track } from "@vercel/analytics";
 import { useCallback, useState } from "react";
 import type { AiProviderType } from "../_types/formatter";
 import type { ShowToast } from "./use-toast";
@@ -38,6 +39,7 @@ export function useAiFormat({
     }
 
     setIsAiFormatting(true);
+    track("ai_format_started", { provider: aiProviderType });
     const originalText = inputText;
     try {
       const res = await fetch("/api/ai-format", {
@@ -89,6 +91,7 @@ export function useAiFormat({
 
       setInputText(finalText);
       showToast("AI 排版完成");
+      track("ai_format_succeeded", { provider: aiProviderType });
     } catch {
       setInputText(originalText);
       showToast("网络错误，请稍后重试", "error");

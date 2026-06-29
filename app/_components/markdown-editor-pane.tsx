@@ -1,6 +1,8 @@
 import {
+  CheckSquare,
   Code2,
   FileText,
+  Highlighter,
   Image as ImageIcon,
   Link as LinkIcon,
   List,
@@ -10,6 +12,9 @@ import {
   Quote,
   Settings,
   Sparkles,
+  Subscript,
+  Superscript,
+  Table,
 } from "lucide-react";
 import type React from "react";
 import type { ActiveTab, WordCount } from "../_types/formatter";
@@ -24,7 +29,11 @@ type MarkdownEditorPaneProps = {
   wordCount: WordCount;
   insertMarkdown: (prefix: string, suffix?: string, placeholder?: string) => void;
   insertHeading: (level: number) => void;
-  insertList: (type: "ul" | "ol") => void;
+  insertList: (type: "ul" | "ol" | "tl") => void;
+  insertTable: () => void;
+  insertHighlight: () => void;
+  insertSuperscript: () => void;
+  insertSubscript: () => void;
   insertCodeBlock: () => void;
   insertLink: () => void;
   insertImage: () => void;
@@ -45,6 +54,10 @@ export function MarkdownEditorPane({
   insertMarkdown,
   insertHeading,
   insertList,
+  insertTable,
+  insertHighlight,
+  insertSuperscript,
+  insertSubscript,
   insertCodeBlock,
   insertLink,
   insertImage,
@@ -94,111 +107,138 @@ export function MarkdownEditorPane({
         </div>
       </div>
 
-      <div className="bg-(--neo-surface) px-3 py-2 border-b-[3px] border-(--neo-ink) flex flex-wrap items-center gap-2 shrink-0">
-        <div className="flex items-center gap-1 mr-2">
+      <div className="bg-(--neo-surface) px-3 py-2 border-b-[3px] border-(--neo-ink) flex flex-wrap items-center gap-x-2 gap-y-2 shrink-0 overflow-x-auto custom-scrollbar no-scrollbar">
+        {/* Style Group */}
+        <div className="flex items-center gap-1">
           <button
             onClick={() => insertHeading(1)}
-            className="neo-toolbar-button p-1.5 text-sm"
+            className="neo-toolbar-button p-1.5 text-sm font-bold"
             title="一级标题"
           >
             H1
           </button>
           <button
             onClick={() => insertHeading(2)}
-            className="neo-toolbar-button p-1.5 text-sm"
+            className="neo-toolbar-button p-1.5 text-sm font-bold"
             title="二级标题"
           >
             H2
           </button>
           <button
             onClick={() => insertHeading(3)}
-            className="neo-toolbar-button p-1.5 text-sm"
+            className="neo-toolbar-button p-1.5 text-sm font-bold"
             title="三级标题"
           >
             H3
           </button>
+          <div className="w-[2px] h-4 bg-(--neo-ink)/20 mx-0.5" />
+          <button
+            onClick={() => insertMarkdown("**", "**", "加粗")}
+            className="neo-toolbar-button p-1.5 font-bold"
+            title="加粗 (Ctrl+B)"
+          >
+            B
+          </button>
+          <button
+            onClick={() => insertMarkdown("*", "*", "斜体")}
+            className="neo-toolbar-button p-1.5 italic font-serif"
+            title="斜体 (Ctrl+I)"
+          >
+            I
+          </button>
+          <button
+            onClick={() => insertMarkdown("~~", "~~", "删除线")}
+            className="neo-toolbar-button p-1.5 line-through"
+            title="删除线"
+          >
+            S
+          </button>
+          <button
+            onClick={insertHighlight}
+            className="neo-toolbar-button p-1.5 text-yellow-600"
+            title="文本高亮"
+          >
+            <Highlighter className="w-4 h-4" />
+          </button>
         </div>
-        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1" />
-        <button
-          onClick={() => insertMarkdown("**", "**", "加粗")}
-          className="neo-toolbar-button p-1.5"
-          title="加粗 (Ctrl+B)"
-        >
-          B
-        </button>
-        <button
-          onClick={() => insertMarkdown("*", "*", "斜体")}
-          className="neo-toolbar-button p-1.5 italic"
-          title="斜体 (Ctrl+I)"
-        >
-          I
-        </button>
-        <button
-          onClick={() => insertMarkdown("~~", "~~", "删除线")}
-          className="neo-toolbar-button p-1.5 line-through"
-          title="删除线"
-        >
-          S
-        </button>
-        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1" />
-        <button
-          onClick={() => insertList("ul")}
-          className="neo-toolbar-button p-1.5"
-          title="无序列表"
-        >
-          <List className="w-4 h-4" />
-        </button>
-        <button
-          onClick={() => insertList("ol")}
-          className="neo-toolbar-button p-1.5"
-          title="有序列表"
-        >
-          <ListOrdered className="w-4 h-4" />
-        </button>
-        <button
-          onClick={() => insertMarkdown("> ", "", "引用内容")}
-          className="neo-toolbar-button p-1.5"
-          title="引用"
-        >
-          <Quote className="w-4 h-4" />
-        </button>
-        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1" />
-        <button
-          onClick={() => insertMarkdown("`", "`", "代码")}
-          className="neo-toolbar-button p-1.5 font-mono text-sm"
-          title="行内代码"
-        >
-          {"</>"}
-        </button>
-        <button
-          onClick={insertCodeBlock}
-          className="neo-toolbar-button p-1.5"
-          title="代码块"
-        >
-          <Code2 className="w-4 h-4" />
-        </button>
-        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1" />
-        <button
-          onClick={insertLink}
-          className="neo-toolbar-button p-1.5"
-          title="链接"
-        >
-          <LinkIcon className="w-4 h-4" />
-        </button>
-        <button
-          onClick={insertImage}
-          className="neo-toolbar-button p-1.5"
-          title="图片"
-        >
-          <ImageIcon className="w-4 h-4" />
-        </button>
-        <button
-          onClick={() => insertMarkdown("---\n", "", "")}
-          className="neo-toolbar-button p-1.5"
-          title="分隔线"
-        >
-          <Minus className="w-4 h-4" />
-        </button>
+
+        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1 shrink-0" />
+
+        {/* List Group */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => insertList("ul")}
+            className="neo-toolbar-button p-1.5"
+            title="无序列表"
+          >
+            <List className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => insertList("ol")}
+            className="neo-toolbar-button p-1.5"
+            title="有序列表"
+          >
+            <ListOrdered className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => insertList("tl")}
+            className="neo-toolbar-button p-1.5"
+            title="任务列表"
+          >
+            <CheckSquare className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1 shrink-0" />
+
+        {/* Insert Group */}
+        <div className="flex items-center gap-1">
+          <button onClick={insertLink} className="neo-toolbar-button p-1.5" title="插入链接">
+            <LinkIcon className="w-4 h-4" />
+          </button>
+          <button onClick={insertImage} className="neo-toolbar-button p-1.5" title="插入图片">
+            <ImageIcon className="w-4 h-4" />
+          </button>
+          <button onClick={insertTable} className="neo-toolbar-button p-1.5" title="插入表格">
+            <Table className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => insertMarkdown("---\n", "", "")}
+            className="neo-toolbar-button p-1.5"
+            title="分隔线"
+          >
+            <Minus className="w-4 h-4" />
+          </button>
+        </div>
+
+        <div className="w-[3px] h-6 bg-(--neo-ink) mx-1 shrink-0" />
+
+        {/* Advanced Group */}
+        <div className="flex items-center gap-1">
+          <button
+            onClick={() => insertMarkdown("`", "`", "代码")}
+            className="neo-toolbar-button p-1.5 font-mono text-sm"
+            title="行内代码"
+          >
+            {"</>"}
+          </button>
+          <button onClick={insertCodeBlock} className="neo-toolbar-button p-1.5" title="代码块">
+            <Code2 className="w-4 h-4" />
+          </button>
+          <button
+            onClick={() => insertMarkdown("> ", "", "引用内容")}
+            className="neo-toolbar-button p-1.5"
+            title="引用块"
+          >
+            <Quote className="w-4 h-4" />
+          </button>
+          <button onClick={insertSuperscript} className="neo-toolbar-button p-1.5" title="上标">
+            <Superscript className="w-4 h-4" />
+          </button>
+          <button onClick={insertSubscript} className="neo-toolbar-button p-1.5" title="下标">
+            <Subscript className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
       <textarea
@@ -220,8 +260,7 @@ export function MarkdownEditorPane({
             字数: <strong>{wordCount.words}</strong>
           </span>
           <span>
-            预计阅读:{" "}
-            <strong>{wordCount.readTime}分钟</strong>
+            预计阅读: <strong>{wordCount.readTime}分钟</strong>
           </span>
         </div>
         <span>支持直接粘贴图片</span>

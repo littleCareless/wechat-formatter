@@ -7,7 +7,14 @@ export function AppFooter() {
   return (
     <footer className="bg-(--neo-app-header) border-t-[3px] border-(--neo-ink) py-2 px-4 shrink-0">
       <div className="max-w-[1600px] mx-auto flex flex-row justify-between items-center gap-4">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2.5">
+          <img
+            src="/logo.png"
+            alt="TypeZen"
+            width={20}
+            height={20}
+            className="w-5 h-5 p-0.5 border border-(--neo-ink) bg-white shadow-[1.5px_1.5px_0_0_var(--neo-ink)]"
+          />
           <span className="font-black text-sm tracking-tighter uppercase text-(--neo-ink)">
             {SITE_BRAND}
           </span>
@@ -19,10 +26,7 @@ export function AppFooter() {
         <div className="flex items-center gap-4">
           <div className="hidden md:flex items-center gap-1.5 text-[10px] font-black text-(--neo-ink)">
             Made with <Heart className="w-3 h-3 text-rose-500 fill-rose-500" /> by{" "}
-            <a
-              href={SITE_URL}
-              className="hover:underline underline-offset-4 decoration-2"
-            >
+            <a href={SITE_URL} className="hover:underline underline-offset-4 decoration-2">
               {SITE_BRAND} Team
             </a>
           </div>
@@ -30,7 +34,7 @@ export function AppFooter() {
           <a
             href="https://github.com/mspringjade/wechat-formatter"
             target="_blank"
-            rel="noopener noreferrer"
+            rel="noopener noreferrer nofollow"
             className="neo-button neo-button-ghost p-1"
             title="GitHub 仓库 · Star 支持"
           >

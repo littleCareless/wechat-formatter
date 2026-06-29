@@ -39,11 +39,7 @@ export function useMarkdownTools({
       const selectedText = inputText.substring(start, end);
       const textToInsert = selectedText || placeholder;
       const newText =
-        inputText.substring(0, start) +
-        prefix +
-        textToInsert +
-        suffix +
-        inputText.substring(end);
+        inputText.substring(0, start) + prefix + textToInsert + suffix + inputText.substring(end);
 
       setInputText(newText);
 
@@ -68,21 +64,25 @@ export function useMarkdownTools({
       const selectedText = inputText.substring(start, end);
       const prefix = "#".repeat(level) + " ";
       const textToInsert = selectedText || "标题";
-      const newText = inputText.substring(0, start) + prefix + textToInsert + inputText.substring(end);
+      const newText =
+        inputText.substring(0, start) + prefix + textToInsert + inputText.substring(end);
 
       setInputText(newText);
 
       setTimeout(() => {
         textarea.focus();
         textarea.scrollTop = scrollTop;
-        textarea.setSelectionRange(start + prefix.length, start + prefix.length + textToInsert.length);
+        textarea.setSelectionRange(
+          start + prefix.length,
+          start + prefix.length + textToInsert.length,
+        );
       }, 0);
     },
     [inputRef, inputText, setInputText],
   );
 
   const insertList = useCallback(
-    (type: "ul" | "ol") => {
+    (type: "ul" | "ol" | "tl") => {
       const textarea = inputRef.current;
       if (!textarea) return;
 
@@ -90,20 +90,57 @@ export function useMarkdownTools({
       const start = textarea.selectionStart;
       const end = textarea.selectionEnd;
       const selectedText = inputText.substring(start, end);
-      const prefix = type === "ul" ? "- " : "1. ";
+      let prefix = "";
+      if (type === "ul") prefix = "- ";
+      else if (type === "ol") prefix = "1. ";
+      else if (type === "tl") prefix = "- [ ] ";
+
       const textToInsert = selectedText || "列表项";
-      const newText = inputText.substring(0, start) + prefix + textToInsert + inputText.substring(end);
+      const newText =
+        inputText.substring(0, start) + prefix + textToInsert + inputText.substring(end);
 
       setInputText(newText);
 
       setTimeout(() => {
         textarea.focus();
         textarea.scrollTop = scrollTop;
-        textarea.setSelectionRange(start + prefix.length, start + prefix.length + textToInsert.length);
+        textarea.setSelectionRange(
+          start + prefix.length,
+          start + prefix.length + textToInsert.length,
+        );
       }, 0);
     },
     [inputRef, inputText, setInputText],
   );
+
+  const insertTable = useCallback(() => {
+    const textarea = inputRef.current;
+    if (!textarea) return;
+    const scrollTop = textarea.scrollTop;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const tableTemplate = "\n| 标题 | 标题 |\n| --- | --- |\n| 内容 | 内容 |\n";
+    const newText = inputText.substring(0, start) + tableTemplate + inputText.substring(end);
+    setInputText(newText);
+    setTimeout(() => {
+      textarea.focus();
+      textarea.scrollTop = scrollTop;
+      // Select the first "标题"
+      textarea.setSelectionRange(start + 3, start + 5);
+    }, 0);
+  }, [inputRef, inputText, setInputText]);
+
+  const insertHighlight = useCallback(() => {
+    insertMarkdown("==", "==", "高亮文字");
+  }, [insertMarkdown]);
+
+  const insertSuperscript = useCallback(() => {
+    insertMarkdown("^", "^", "上标");
+  }, [insertMarkdown]);
+
+  const insertSubscript = useCallback(() => {
+    insertMarkdown("~", "~", "下标");
+  }, [insertMarkdown]);
 
   const insertCodeBlock = useCallback(() => {
     const textarea = inputRef.current;
@@ -202,15 +239,7 @@ export function useMarkdownTools({
       };
       reader.readAsDataURL(file);
     },
-    [
-      imageCounterRef,
-      imageDesc,
-      inputRef,
-      inputText,
-      setImageMap,
-      setInputText,
-      setShowImageModal,
-    ],
+    [imageCounterRef, imageDesc, inputRef, inputText, setImageMap, setInputText, setShowImageModal],
   );
 
   const handleOnlineImage = useCallback(() => {
@@ -267,7 +296,9 @@ export function useMarkdownTools({
               const end = textarea.selectionEnd;
               const imageMarkdown = `\n![图片](#${imageId})\n`;
 
-              setInputText((prev) => prev.substring(0, start) + imageMarkdown + prev.substring(end));
+              setInputText(
+                (prev) => prev.substring(0, start) + imageMarkdown + prev.substring(end),
+              );
 
               setTimeout(() => {
                 textarea.focus();
@@ -291,6 +322,10 @@ export function useMarkdownTools({
     insertMarkdown,
     insertHeading,
     insertList,
+    insertTable,
+    insertHighlight,
+    insertSuperscript,
+    insertSubscript,
     insertCodeBlock,
     insertLink,
     insertImage,

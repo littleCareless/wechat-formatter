@@ -118,8 +118,8 @@ export function AiConfigModal({
   const [isLoadingModels, setIsLoadingModels] = useState(false);
   const [modelsError, setModelsError] = useState("");
   const isOpenRouter = aiProviderType === "openrouter";
-  const [providerDrafts, setProviderDrafts] = useState<Record<AiProviderType, ProviderDraft>>(
-    () => createEmptyProviderDrafts(),
+  const [providerDrafts, setProviderDrafts] = useState<Record<AiProviderType, ProviderDraft>>(() =>
+    createEmptyProviderDrafts(),
   );
 
   useEffect(() => {
@@ -166,10 +166,7 @@ export function AiConfigModal({
 
     return models
       .filter((model) => {
-        return (
-          model.name.toLowerCase().includes(query) ||
-          model.id.toLowerCase().includes(query)
-        );
+        return model.name.toLowerCase().includes(query) || model.id.toLowerCase().includes(query);
       })
       .slice(0, 80);
   }, [models, modelQuery]);
@@ -249,9 +246,7 @@ export function AiConfigModal({
 
         <div className="flex-1 overflow-y-auto neo-scrollbar p-6 py-4 space-y-4">
           <div>
-            <label className="block text-sm font-black text-(--neo-ink) mb-2">
-              API 类型
-            </label>
+            <label className="block text-sm font-black text-(--neo-ink) mb-2">API 类型</label>
             <div className="grid grid-cols-3 gap-2 bg-(--neo-cyan) border-[3px] border-(--neo-ink) p-2">
               <button
                 type="button"
@@ -288,9 +283,7 @@ export function AiConfigModal({
 
           <div>
             <div className="flex items-center justify-between gap-3 mb-1">
-              <label className="block text-sm font-black text-(--neo-ink)">
-                API 地址
-              </label>
+              <label className="block text-sm font-black text-(--neo-ink)">API 地址</label>
               {isOpenRouter && (
                 <button
                   type="button"
@@ -307,18 +300,14 @@ export function AiConfigModal({
               readOnly={isOpenRouter}
               onChange={(e) => handleBaseUrlChange(e.target.value)}
               className={`neo-input w-full px-3 py-2 ${isOpenRouter ? "bg-(--neo-surface)" : ""}`}
-              placeholder={
-                providerBaseUrlPlaceholders[aiProviderType]
-              }
+              placeholder={providerBaseUrlPlaceholders[aiProviderType]}
               autoComplete="off"
             />
           </div>
 
           <div>
             <div className="flex items-center justify-between gap-3 mb-1">
-              <label className="block text-sm font-black text-(--neo-ink)">
-                API Key
-              </label>
+              <label className="block text-sm font-black text-(--neo-ink)">API Key</label>
               {isOpenRouter && (
                 <a
                   href={openRouterConfig.apiKeyUrl}
@@ -364,9 +353,7 @@ export function AiConfigModal({
           {isOpenRouter && (
             <div className="space-y-2">
               <div className="flex items-center justify-between gap-3">
-                <label className="block text-sm font-black text-(--neo-ink)">
-                  搜索模型
-                </label>
+                <label className="block text-sm font-black text-(--neo-ink)">搜索模型</label>
                 <a
                   href={openRouterConfig.modelsPageUrl}
                   target="_blank"
@@ -434,9 +421,7 @@ export function AiConfigModal({
                               <Check className="w-4 h-4 shrink-0 text-(--neo-ink)" />
                             )}
                           </div>
-                          <p className="text-xs neo-text-muted font-bold break-all">
-                            {model.id}
-                          </p>
+                          <p className="text-xs neo-text-muted font-bold break-all">{model.id}</p>
                         </div>
                         <div className="text-right shrink-0 space-y-1">
                           <span
@@ -469,22 +454,13 @@ export function AiConfigModal({
         </div>
 
         <div className="flex gap-3 p-6 pt-4 shrink-0 border-t-[3px] border-(--neo-ink)">
-          <button
-            onClick={onSave}
-            className="neo-button neo-button-primary flex-1 py-2.5"
-          >
+          <button onClick={onSave} className="neo-button neo-button-primary flex-1 py-2.5">
             保存配置
           </button>
-          <button
-            onClick={handleClear}
-            className="neo-button neo-button-secondary px-4 py-2.5"
-          >
+          <button onClick={handleClear} className="neo-button neo-button-secondary px-4 py-2.5">
             清空
           </button>
-          <button
-            onClick={onClose}
-            className="neo-button neo-button-ghost px-4 py-2.5"
-          >
+          <button onClick={onClose} className="neo-button neo-button-ghost px-4 py-2.5">
             取消
           </button>
         </div>
