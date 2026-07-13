@@ -56,7 +56,15 @@ export function LandingFooter() {
               </li>
               <li>
                 <Link
-                  href="#features"
+                  href="/blog"
+                  className="font-bold text-(--neo-pink) hover:text-(--neo-ink) transition-colors flex items-center gap-2 text-sm"
+                >
+                  <ExternalLink className="w-4 h-4" /> Blog
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/#features"
                   className="font-bold text-(--neo-muted) hover:text-(--neo-ink) transition-colors text-sm"
                 >
                   功能特性
@@ -64,7 +72,7 @@ export function LandingFooter() {
               </li>
               <li>
                 <Link
-                  href="#faq"
+                  href="/#faq"
                   className="font-bold text-(--neo-muted) hover:text-(--neo-ink) transition-colors text-sm"
                 >
                   常见问题

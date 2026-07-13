@@ -33,6 +33,9 @@ export function AppFooter() {
           </div>
           <div className="h-4 w-[1px] bg-(--neo-ink) opacity-20 hidden md:block" />
           <div className="hidden lg:flex items-center gap-3 text-[10px] font-bold text-(--neo-muted)">
+            <Link href="/blog" className="hover:text-(--neo-ink) transition-colors font-black text-(--neo-pink)">
+              Blog
+            </Link>
             <Link href="/about" className="hover:text-(--neo-ink) transition-colors">
               关于
             </Link>

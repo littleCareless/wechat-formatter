@@ -372,3 +372,154 @@ body {
   border-radius: 8px;
   margin: 20px;
 }
+
+/* 博客 Markdown 内容排版样式 (Prose Neo) */
+.prose-neo h2 {
+  font-size: 1.75rem;
+  font-weight: 900;
+  margin-top: 2.5rem;
+  margin-bottom: 1.25rem;
+  border-bottom: 3px solid var(--neo-ink);
+  padding-bottom: 0.5rem;
+  color: var(--neo-ink);
+  line-height: 1.2;
+}
+
+.prose-neo h3 {
+  font-size: 1.35rem;
+  font-weight: 900;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+  color: var(--neo-ink);
+  line-height: 1.3;
+}
+
+.prose-neo p {
+  margin-bottom: 1.25rem;
+  line-height: 1.8;
+  color: var(--neo-ink);
+}
+
+.prose-neo strong {
+  font-weight: 900;
+  color: var(--neo-ink);
+}
+
+.prose-neo blockquote {
+  border-left: 4px solid var(--neo-pink);
+  background-color: rgba(21, 21, 21, 0.03);
+  padding: 1.25rem;
+  margin: 1.5rem 0;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--neo-muted);
+}
+
+.dark .prose-neo blockquote {
+  background-color: rgba(237, 230, 216, 0.03);
+}
+
+.prose-neo ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-neo ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+  margin-bottom: 1.25rem;
+}
+
+.prose-neo li {
+  margin-bottom: 0.5rem;
+  line-height: 1.7;
+}
+
+.prose-neo a {
+  color: var(--neo-pink);
+  font-weight: 900;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+  transition: color 100ms ease;
+}
+
+.prose-neo a:hover {
+  color: var(--neo-cyan);
+}
+
+.prose-neo code {
+  background-color: rgba(21, 21, 21, 0.06);
+  padding: 0.2rem 0.4rem;
+  font-size: 0.9em;
+  font-family: var(--font-mono), monospace;
+  font-weight: bold;
+  border: 1.5px solid var(--neo-ink);
+}
+
+.dark .prose-neo code {
+  background-color: rgba(237, 230, 216, 0.08);
+}
+
+.prose-neo pre {
+  background-color: #1e1b17;
+  color: #ede6dc;
+  padding: 1.25rem;
+  border: var(--neo-border-thin);
+  box-shadow: 4px 4px 0 0 var(--neo-shadow-core);
+  overflow-x: auto;
+  margin: 1.5rem 0;
+  font-family: var(--font-mono), monospace;
+}
+
+.dark .prose-neo pre {
+  background-color: #070605;
+  color: #a89d8f;
+  box-shadow: 4px 4px 0 0 #000000;
+}
+
+.prose-neo pre code {
+  background-color: transparent;
+  padding: 0;
+  font-size: 0.95em;
+  font-weight: normal;
+  border: none;
+  color: inherit;
+}
+
+.prose-neo hr {
+  border: 0;
+  border-top: 3px solid var(--neo-ink);
+  margin: 2.5rem 0;
+}
+
+.prose-neo img {
+  border: var(--neo-border-thin);
+  box-shadow: var(--neo-shadow);
+  max-width: 100%;
+  height: auto;
+  margin: 1.5rem 0;
+}
+
+.prose-neo table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5rem 0;
+  border: var(--neo-border-thin);
+  background-color: var(--neo-surface);
+}
+
+.prose-neo th,
+.prose-neo td {
+  border: var(--neo-border-thin);
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+.prose-neo th {
+  background-color: var(--neo-yellow);
+  color: #111111;
+  font-weight: 900;
+}
+

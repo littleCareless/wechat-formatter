@@ -26,28 +26,34 @@ export function LandingHeader() {
 
         <nav className="hidden md:flex items-center gap-8">
           <Link
-            href="#features"
+            href="/#features"
             className="font-black text-sm uppercase hover:text-(--neo-pink) transition-colors"
           >
             功能特性
           </Link>
           <Link
-            href="#how-it-works"
+            href="/#how-it-works"
             className="font-black text-sm uppercase hover:text-(--neo-pink) transition-colors"
           >
             使用指南
           </Link>
           <Link
-            href="#testimonials"
+            href="/#testimonials"
             className="font-black text-sm uppercase hover:text-(--neo-pink) transition-colors"
           >
             用户反馈
           </Link>
           <Link
-            href="#faq"
+            href="/#faq"
             className="font-black text-sm uppercase hover:text-(--neo-pink) transition-colors"
           >
             常见问题
+          </Link>
+          <Link
+            href="/blog"
+            className="font-black text-sm uppercase text-(--neo-pink) hover:text-(--neo-pink) transition-colors"
+          >
+            Blog
           </Link>
         </nav>
 
