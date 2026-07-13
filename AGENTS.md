@@ -20,7 +20,7 @@ TypeZen 是一款专为微信公众号设计的「Markdown 转微信排版」辅
 ## 项目结构
 
 ```
-wechat-formatter-pro/
+wechat-formatter/
 ├── app/
 │   ├── _components/              # 页面拆分组件（编辑区、预览区、设置面板、AI 配置弹窗等）
 │   │   └── landing/              # 落地页通用组件（header、footer、legal-layout 等）
