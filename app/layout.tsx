@@ -101,6 +101,12 @@ export default function RootLayout({
     >
       <head>
         <JsonLd />
+        <script
+          defer
+          src="https://vibeloft.ai/telemetry/v1.js"
+          data-vl-product-id="263308b2-f045-4619-98f4-5fa695423699"
+          data-vl-auth-key="vl_web.YRnem1cpT6poU9n-9Ss9m1up13cfbkZ1-9vVHxjKCYk"
+        />
         {process.env.NODE_ENV === "production" && (
           <>
             <Script
